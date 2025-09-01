@@ -10,7 +10,6 @@ class NewUserRequest extends FormRequest {
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool {
-        // return Auth::check() && Auth::user()->hasPermission('createUser');
         return true;
     }
 
@@ -26,6 +25,14 @@ class NewUserRequest extends FormRequest {
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|max:32',
             'role_id' => 'required|exists:roles,id',
+            'active' => 'sometimes|boolean',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if (!$this->has('active')) {
+            $this->merge(['active' => true]);
+        }
     }
 }
