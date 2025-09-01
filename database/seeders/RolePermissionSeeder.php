@@ -4,16 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RolePermissionSeeder extends Seeder
-{
+class RolePermissionSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
+    public function run(): void {
         $permissions = [
             ['name' => 'createUser', 'displayName' => 'Usuarios -> Crear nuevo usuario', 'description' => 'Crear nuevo usuario'],
             ['name' => 'editUser', 'displayName' => 'Usuarios -> Editar usuario', 'description' => 'Editar usuario existente'],
