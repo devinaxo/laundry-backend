@@ -24,6 +24,7 @@ class User extends Authenticatable {
         'email',
         'password',
         'role_id',
+        'active',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'active' => 'boolean',
         ];
     }
 
@@ -54,5 +56,9 @@ class User extends Authenticatable {
 
     public function hasPermission(string $permissionName): bool {
         return $this->role?->hasPermission($permissionName) ?? false;
+    }
+
+    public function scopeActive($query) {
+        return $query->where('active', true);
     }
 }
