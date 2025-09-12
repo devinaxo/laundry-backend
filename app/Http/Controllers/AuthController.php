@@ -11,6 +11,7 @@ class AuthController extends Controller {
     public function login(LoginRequest $request) {
         PersonalAccessToken::where('expires_at', '<', now())->delete();
 
+        
         $validated = $request->validated();
 
         $credentials = array_merge($validated, ['active' => true]);
