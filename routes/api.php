@@ -5,7 +5,10 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-use App\Models\Role;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Endpoints
@@ -20,10 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * User Endpoints
      */
-    // Custom routes must be defined before resource routes to avoid conflicts
     Route::get('/users/all', [UserController::class, 'all'])->middleware('permission:viewUser');
     Route::patch('/users/{user}/restore', [UserController::class, 'restore'])->middleware('permission:editUser');
-    
     Route::apiResource('users', UserController::class)->middleware([
         'index' => 'permission:viewUser',
         'show' => 'permission:viewUser',
@@ -35,9 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Role Endpoints
      */
-    // Custom routes must be defined before resource routes to avoid conflicts
     Route::patch('/roles/{role}/permissions', [RoleController::class, 'assignPermissions'])->middleware('permission:editRole');
-    
     Route::apiResource('roles', RoleController::class)->middleware([
         'index' => 'permission:viewRole',
         'show' => 'permission:viewRole',
@@ -58,7 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Client Endpoints
      */
-    // Custom routes must be defined before resource routes to avoid conflicts
     Route::get('/clients/all', [ClientController::class, 'all'])->middleware('permission:viewClient');
     Route::get('/clients/paginated', [ClientController::class, 'paginated'])->middleware('permission:viewClient');
     Route::patch('/clients/{client}/restore', [ClientController::class, 'restore'])->middleware('permission:editClient');
@@ -70,13 +68,30 @@ Route::middleware('auth:sanctum')->group(function () {
         'update' => 'permission:editClient',
         'destroy' => 'permission:deleteClient',
     ]);
-});
 
-Route::get('/test-user', function () {
-    $user = \App\Models\User::with('role.permissions')->first();
+    /**
+     * Category Endpoints
+     */
+    Route::apiResource('categories', CategoryController::class);
 
-    return [
-        'user' => $user,
-        'hasCreateUserPermission' => $user?->hasPermission('createUser') ?? false,
-    ];
+    /**
+     * Subcategory Endpoints
+     */
+    Route::get('/categories/{category}/subcategories', [SubcategoryController::class, 'getByCategory']);
+    Route::apiResource('subcategories', SubcategoryController::class);
+
+    /**
+     * Order Endpoints
+     */
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
+    Route::apiResource('orders', OrderController::class);
+
+    /**
+     * Order Items Endpoints (nested under orders)
+     */
+    Route::get('/orders/{order}/items', [OrderItemController::class, 'index']);
+    Route::post('/orders/{order}/items', [OrderItemController::class, 'store']);
+    Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show']);
+    Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update']);
+    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy']);
 });
