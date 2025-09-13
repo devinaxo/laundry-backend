@@ -15,7 +15,7 @@ class SubcategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Subcategory::with('categoria')->where('activa', true);
+        $query = Subcategory::with('category')->where('active', true);
         
         // Filter by category if provided
         if ($request->has('category_id')) {
@@ -38,27 +38,27 @@ class SubcategoryController extends Controller
         try {
             $validated = $request->validate([
                 'category_id' => 'required|exists:categories,id',
-                'nombre' => 'required|string|max:255',
-                'descripcion' => 'nullable|string|max:500',
-                'precio' => 'required|numeric|min:0',
-                'activa' => 'boolean'
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string|max:500',
+                'price' => 'required|numeric|min:0',
+                'active' => 'boolean'
             ]);
 
             // Check unique constraint manually
             $exists = Subcategory::where('category_id', $validated['category_id'])
-                                ->where('nombre', $validated['nombre'])
+                                ->where('name', $validated['name'])
                                 ->exists();
             
             if ($exists) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Ya existe una subcategoría con ese nombre en esta categoría',
-                    'errors' => ['nombre' => ['Este nombre ya existe en la categoría seleccionada']]
+                    'message' => 'Ya existe una subcategoría con ese name en esta categoría',
+                    'errors' => ['name' => ['Este name ya existe en la categoría seleccionada']]
                 ], 422);
             }
 
             $subcategory = Subcategory::create($validated);
-            $subcategory->load('categoria');
+            $subcategory->load('category');
 
             return response()->json([
                 'success' => true,
@@ -80,7 +80,7 @@ class SubcategoryController extends Controller
      */
     public function show(Subcategory $subcategory): JsonResponse
     {
-        $subcategory->load('categoria');
+        $subcategory->load('category');
         
         return response()->json([
             'success' => true,
@@ -96,28 +96,28 @@ class SubcategoryController extends Controller
         try {
             $validated = $request->validate([
                 'category_id' => 'required|exists:categories,id',
-                'nombre' => 'required|string|max:255',
-                'descripcion' => 'nullable|string|max:500',
-                'precio' => 'required|numeric|min:0',
-                'activa' => 'boolean'
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string|max:500',
+                'price' => 'required|numeric|min:0',
+                'active' => 'boolean'
             ]);
 
             // Check unique constraint manually (excluding current record)
             $exists = Subcategory::where('category_id', $validated['category_id'])
-                                ->where('nombre', $validated['nombre'])
+                                ->where('name', $validated['name'])
                                 ->where('id', '!=', $subcategory->id)
                                 ->exists();
             
             if ($exists) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Ya existe una subcategoría con ese nombre en esta categoría',
-                    'errors' => ['nombre' => ['Este nombre ya existe en la categoría seleccionada']]
+                    'message' => 'Ya existe una subcategoría con ese name en esta categoría',
+                    'errors' => ['name' => ['Este name ya existe en la categoría seleccionada']]
                 ], 422);
             }
 
             $subcategory->update($validated);
-            $subcategory->load('categoria');
+            $subcategory->load('category');
 
             return response()->json([
                 'success' => true,
@@ -140,11 +140,11 @@ class SubcategoryController extends Controller
     public function destroy(Subcategory $subcategory): JsonResponse
     {
         // Soft delete - just mark as inactive
-        $subcategory->update(['activa' => false]);
+        $subcategory->update(['active' => false]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Subcategoría desactivada exitosamente'
+            'message' => 'Subcategoría desactiveda exitosamente'
         ]);
     }
 
@@ -153,7 +153,7 @@ class SubcategoryController extends Controller
      */
     public function getByCategory(Category $category): JsonResponse
     {
-        $subcategories = $category->subcategorias()->where('activa', true)->get();
+        $subcategories = $category->subcategories()->where('active', true)->get();
         
         return response()->json([
             'success' => true,

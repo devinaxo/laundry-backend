@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $categories = Category::with('subcategorias')->where('activa', true)->get();
+        $categories = Category::with('subcategories')->where('active', true)->get();
         
         return response()->json([
             'success' => true,
@@ -29,9 +29,9 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validate([
-                'nombre' => 'required|string|max:255|unique:categories',
-                'descripcion' => 'nullable|string|max:500',
-                'activa' => 'boolean'
+                'name' => 'required|string|max:255|unique:categories',
+                'description' => 'nullable|string|max:500',
+                'active' => 'boolean'
             ]);
 
             $category = Category::create($validated);
@@ -56,7 +56,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category): JsonResponse
     {
-        $category->load('subcategorias');
+        $category->load('subcategories');
         
         return response()->json([
             'success' => true,
@@ -71,9 +71,9 @@ class CategoryController extends Controller
     {
         try {
             $validated = $request->validate([
-                'nombre' => 'required|string|max:255|unique:categories,nombre,' . $category->id,
-                'descripcion' => 'nullable|string|max:500',
-                'activa' => 'boolean'
+                'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+                'description' => 'nullable|string|max:500',
+                'active' => 'boolean'
             ]);
 
             $category->update($validated);
@@ -99,7 +99,7 @@ class CategoryController extends Controller
     public function destroy(Category $category): JsonResponse
     {
         // Soft delete - just mark as inactive
-        $category->update(['activa' => false]);
+        $category->update(['active' => false]);
 
         return response()->json([
             'success' => true,

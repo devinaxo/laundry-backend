@@ -22,9 +22,9 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|string|max:255|unique:categories',
-            'descripcion' => 'nullable|string|max:500',
-            'activa' => 'boolean'
+            'name' => 'required|string|max:255|unique:categories',
+            'description' => 'nullable|string|max:500',
+            'active' => 'boolean'
         ];
     }
 
@@ -34,10 +34,10 @@ class StoreCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nombre.required' => 'El nombre de la categoría es obligatorio',
-            'nombre.unique' => 'Ya existe una categoría con este nombre',
-            'nombre.max' => 'El nombre no puede tener más de 255 caracteres',
-            'descripcion.max' => 'La descripción no puede tener más de 500 caracteres'
+            'name.required' => 'El nombre de la categoría es obligatorio',
+            'name.unique' => 'Ya existe una categoría con este nombre',
+            'name.max' => 'El nombre no puede tener más de 255 caracteres',
+            'description.max' => 'La descripción no puede tener más de 500 caracteres'
         ];
     }
 }

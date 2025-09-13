@@ -16,7 +16,7 @@ class OrderItemController extends Controller
      */
     public function index(Order $order): JsonResponse
     {
-        $items = $order->items()->with('subcategoria.categoria')->get();
+        $items = $order->items()->with('subcategory.category')->get();
         
         return response()->json([
             'success' => true,
@@ -32,22 +32,22 @@ class OrderItemController extends Controller
         try {
             $validated = $request->validate([
                 'subcategory_id' => 'required|exists:subcategories,id',
-                'cantidad' => 'required|integer|min:1',
-                'notas' => 'nullable|string|max:500'
+                'quantity' => 'required|integer|min:1',
+                'notes' => 'nullable|string|max:500'
             ]);
 
             DB::beginTransaction();
 
             $subcategory = \App\Models\Subcategory::find($validated['subcategory_id']);
-            $subtotal = $subcategory->precio * $validated['cantidad'];
+            $subtotal = $subcategory->price * $validated['quantity'];
 
             $orderItem = OrderItem::create([
                 'order_id' => $order->id,
                 'subcategory_id' => $validated['subcategory_id'],
-                'cantidad' => $validated['cantidad'],
-                'precio_unitario' => $subcategory->precio,
+                'quantity' => $validated['quantity'],
+                'unit_price' => $subcategory->price,
                 'subtotal' => $subtotal,
-                'notas' => $validated['notas'] ?? null
+                'notes' => $validated['notes'] ?? null
             ]);
 
             // Update order total
@@ -56,7 +56,7 @@ class OrderItemController extends Controller
 
             DB::commit();
 
-            $orderItem->load('subcategoria.categoria');
+            $orderItem->load('subcategory.category');
 
             return response()->json([
                 'success' => true,
@@ -93,7 +93,7 @@ class OrderItemController extends Controller
             ], 404);
         }
 
-        $orderItem->load('subcategoria.categoria');
+        $orderItem->load('subcategory.category');
         
         return response()->json([
             'success' => true,
@@ -117,21 +117,21 @@ class OrderItemController extends Controller
         try {
             $validated = $request->validate([
                 'subcategory_id' => 'required|exists:subcategories,id',
-                'cantidad' => 'required|integer|min:1',
-                'notas' => 'nullable|string|max:500'
+                'quantity' => 'required|integer|min:1',
+                'notes' => 'nullable|string|max:500'
             ]);
 
             DB::beginTransaction();
 
             $subcategory = \App\Models\Subcategory::find($validated['subcategory_id']);
-            $subtotal = $subcategory->precio * $validated['cantidad'];
+            $subtotal = $subcategory->price * $validated['quantity'];
 
             $orderItem->update([
                 'subcategory_id' => $validated['subcategory_id'],
-                'cantidad' => $validated['cantidad'],
-                'precio_unitario' => $subcategory->precio,
+                'quantity' => $validated['quantity'],
+                'unit_price' => $subcategory->price,
                 'subtotal' => $subtotal,
-                'notas' => $validated['notas'] ?? null
+                'notes' => $validated['notes'] ?? null
             ]);
 
             // Update order total
@@ -140,7 +140,7 @@ class OrderItemController extends Controller
 
             DB::commit();
 
-            $orderItem->load('subcategoria.categoria');
+            $orderItem->load('subcategory.category');
 
             return response()->json([
                 'success' => true,
@@ -178,7 +178,7 @@ class OrderItemController extends Controller
         }
 
         // Don't allow deleting items if order is delivered
-        if ($order->estado === 'entregado') {
+        if ($order->status === 'delivered') {
             return response()->json([
                 'success' => false,
                 'message' => 'No se puede eliminar items de un pedido entregado'

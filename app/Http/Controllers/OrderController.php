@@ -16,7 +16,7 @@ class OrderController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Order::with(['cliente', 'items.subcategoria.categoria']);
+        $query = Order::with(['client', 'items.subcategory.category']);
         
         // Filter by client if provided
         if ($request->has('client_id')) {
@@ -24,17 +24,17 @@ class OrderController extends Controller
         }
         
         // Filter by status if provided
-        if ($request->has('estado')) {
-            $query->where('estado', $request->estado);
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
         }
         
         // Filter by date range
         if ($request->has('fecha_desde')) {
-            $query->where('fecha_recepcion', '>=', $request->fecha_desde);
+            $query->where('reception_date', '>=', $request->fecha_desde);
         }
         
         if ($request->has('fecha_hasta')) {
-            $query->where('fecha_recepcion', '<=', $request->fecha_hasta);
+            $query->where('reception_date', '<=', $request->fecha_hasta);
         }
         
         $orders = $query->orderBy('created_at', 'desc')->get();
@@ -53,13 +53,13 @@ class OrderController extends Controller
         try {
             $validated = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'fecha_recepcion' => 'required|date',
-                'fecha_entrega_estimada' => 'nullable|date|after:fecha_recepcion',
-                'notas' => 'nullable|string|max:1000',
+                'reception_date' => 'required|date',
+                'estimated_delivery_date' => 'nullable|date|after:reception_date',
+                'notes' => 'nullable|string|max:1000',
                 'items' => 'required|array|min:1',
                 'items.*.subcategory_id' => 'required|exists:subcategories,id',
-                'items.*.cantidad' => 'required|integer|min:1',
-                'items.*.notas' => 'nullable|string|max:500'
+                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.notes' => 'nullable|string|max:500'
             ]);
 
             DB::beginTransaction();
@@ -70,11 +70,11 @@ class OrderController extends Controller
             // Create order
             $order = Order::create([
                 'client_id' => $validated['client_id'],
-                'numero_pedido' => $orderNumber,
-                'fecha_recepcion' => $validated['fecha_recepcion'],
-                'fecha_entrega_estimada' => $validated['fecha_entrega_estimada'] ?? null,
-                'notas' => $validated['notas'] ?? null,
-                'estado' => 'pendiente'
+                'order_number' => $orderNumber,
+                'reception_date' => $validated['reception_date'],
+                'estimated_delivery_date' => $validated['estimated_delivery_date'] ?? null,
+                'notes' => $validated['notes'] ?? null,
+                'status' => 'pending'
             ]);
 
             $total = 0;
@@ -82,16 +82,16 @@ class OrderController extends Controller
             // Create order items
             foreach ($validated['items'] as $itemData) {
                 $subcategory = \App\Models\Subcategory::find($itemData['subcategory_id']);
-                $subtotal = $subcategory->precio * $itemData['cantidad'];
+                $subtotal = $subcategory->price * $itemData['quantity'];
                 $total += $subtotal;
 
                 OrderItem::create([
                     'order_id' => $order->id,
                     'subcategory_id' => $itemData['subcategory_id'],
-                    'cantidad' => $itemData['cantidad'],
-                    'precio_unitario' => $subcategory->precio,
+                    'quantity' => $itemData['quantity'],
+                    'unit_price' => $subcategory->price,
                     'subtotal' => $subtotal,
-                    'notas' => $itemData['notas'] ?? null
+                    'notes' => $itemData['notes'] ?? null
                 ]);
             }
 
@@ -100,7 +100,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            $order->load(['cliente', 'items.subcategoria.categoria']);
+            $order->load(['client', 'items.subcategory.category']);
 
             return response()->json([
                 'success' => true,
@@ -129,7 +129,7 @@ class OrderController extends Controller
      */
     public function show(Order $order): JsonResponse
     {
-        $order->load(['cliente', 'items.subcategoria.categoria']);
+        $order->load(['client', 'items.subcategory.category']);
         
         return response()->json([
             'success' => true,
@@ -144,14 +144,14 @@ class OrderController extends Controller
     {
         try {
             $validated = $request->validate([
-                'estado' => 'nullable|in:pendiente,en_proceso,listo,entregado,cancelado',
-                'fecha_entrega_estimada' => 'nullable|date|after:fecha_recepcion',
-                'fecha_entrega_real' => 'nullable|date',
-                'notas' => 'nullable|string|max:1000'
+                'status' => 'nullable|in:pending,in_progress,ready,delivered,cancelled',
+                'estimated_delivery_date' => 'nullable|date|after:reception_date',
+                'actual_delivery_date' => 'nullable|date',
+                'notes' => 'nullable|string|max:1000'
             ]);
 
             $order->update($validated);
-            $order->load(['cliente', 'items.subcategoria.categoria']);
+            $order->load(['client', 'items.subcategory.category']);
 
             return response()->json([
                 'success' => true,
@@ -173,14 +173,14 @@ class OrderController extends Controller
      */
     public function destroy(Order $order): JsonResponse
     {
-        if ($order->estado === 'entregado') {
+        if ($order->status === 'delivered') {
             return response()->json([
                 'success' => false,
                 'message' => 'No se puede eliminar un pedido que ya fue entregado'
             ], 422);
         }
 
-        $order->update(['estado' => 'cancelado']);
+        $order->update(['status' => 'cancelled']);
 
         return response()->json([
             'success' => true,
@@ -195,14 +195,14 @@ class OrderController extends Controller
     {
         try {
             $validated = $request->validate([
-                'estado' => 'required|in:pendiente,en_proceso,listo,entregado,cancelado'
+                'status' => 'required|in:pending,in_progress,ready,delivered,cancelled'
             ]);
 
             $order->update($validated);
 
             // If marking as delivered, set delivery date
-            if ($validated['estado'] === 'entregado' && !$order->fecha_entrega_real) {
-                $order->update(['fecha_entrega_real' => now()->toDateString()]);
+            if ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
+                $order->update(['actual_delivery_date' => now()->toDateString()]);
             }
 
             return response()->json([
