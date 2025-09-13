@@ -14,6 +14,10 @@ class UserController extends Controller {
     }
 
     public function index() {
+        return User::with('role')->where('active', true)->get();
+    }
+
+    public function all() {
         return User::with('role')->get();
     }
 

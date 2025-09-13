@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
@@ -20,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
      * User Endpoints
      */
     Route::get('/users', [UserController::class, 'index'])->middleware('permission:viewUser');
+    Route::get('/users/all', [UserController::class, 'all'])->middleware('permission:viewUser');
     Route::get('/users/{user}', [UserController::class, 'show'])->middleware('permission:viewUser');
     Route::post('/users', [UserController::class, 'store'])->middleware('permission:createUser');
     Route::patch('/users/{user}', [UserController::class, 'update'])->middleware('permission:editUser');
@@ -42,6 +44,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/permissions/{permission}', [PermissionController::class, 'show'])->middleware('permission:viewPermission');
     Route::post('/permissions', [PermissionController::class, 'store'])->middleware('permission:createPermission');
     Route::patch('/permissions/{permission}', [PermissionController::class, 'update'])->middleware('permission:editPermission');
+
+    /**
+     * Client Endpoints
+     */
+    Route::get('/clients', [ClientController::class, 'index'])->middleware('permission:viewClient');
+    Route::get('/clients/all', [ClientController::class, 'all'])->middleware('permission:viewClient');
+    Route::get('/clients/{client}', [ClientController::class, 'show'])->middleware('permission:viewClient');
+    Route::post('/clients', [ClientController::class, 'store'])->middleware('permission:createClient');
+    Route::patch('/clients/{client}', [ClientController::class, 'update'])->middleware('permission:editClient');
+    Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->middleware('permission:deleteClient');
+    Route::patch('/clients/{client}/restore', [ClientController::class, 'restore'])->middleware('permission:editClient');
 });
 
 Route::get('/test-user', function () {
