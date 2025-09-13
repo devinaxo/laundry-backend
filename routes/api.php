@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
      */
     Route::get('/clients', [ClientController::class, 'index'])->middleware('permission:viewClient');
     Route::get('/clients/all', [ClientController::class, 'all'])->middleware('permission:viewClient');
+    Route::get('/clients/paginated', [ClientController::class, 'paginated'])->middleware('permission:viewClient');
     Route::get('/clients/{client}', [ClientController::class, 'show'])->middleware('permission:viewClient');
     Route::post('/clients', [ClientController::class, 'store'])->middleware('permission:createClient');
     Route::patch('/clients/{client}', [ClientController::class, 'update'])->middleware('permission:editClient');
