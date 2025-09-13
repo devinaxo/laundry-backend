@@ -24,6 +24,11 @@ class RolePermissionSeeder extends Seeder {
             ['name' => 'viewPermission', 'displayName' => 'Permisos -> Ver permisos', 'description' => 'Ver lista de permisos'],
             ['name' => 'createPermission', 'displayName' => 'Permisos -> Crear permiso', 'description' => 'Crear nuevos permisos'],
             ['name' => 'editPermission', 'displayName' => 'Permisos -> Editar permiso', 'description' => 'Editar permisos existentes'],
+
+            ['name' => 'viewClient', 'displayName' => 'Clientes -> Ver clientes', 'description' => 'Ver lista y detalles de clientes'],
+            ['name' => 'createClient', 'displayName' => 'Clientes -> Crear cliente', 'description' => 'Crear nuevos clientes'],
+            ['name' => 'editClient', 'displayName' => 'Clientes -> Editar cliente', 'description' => 'Editar clientes existentes'],
+            ['name' => 'deleteClient', 'displayName' => 'Clientes -> Eliminar cliente', 'description' => 'Eliminar clientes'],
         ];
 
         foreach ($permissions as $permission) {
@@ -42,7 +47,7 @@ class RolePermissionSeeder extends Seeder {
 
         $adminRole->permissions()->sync(Permission::all()->pluck('id'));
         $userRole->permissions()->sync(
-            Permission::whereIn('name', ['viewUser'])->pluck('id')
+            Permission::whereIn('name', ['viewUser', 'viewClient'])->pluck('id')
         );
     }
 }
