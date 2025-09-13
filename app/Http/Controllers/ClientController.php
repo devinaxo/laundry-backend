@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\NewClientRequest;
-use App\Http\Requests\PaginatedClientRequest;
+use App\Http\Requests\Clients\NewClientRequest;
+use App\Http\Requests\Clients\PaginatedClientRequest;
 use App\Models\Client;
-use Illuminate\Http\Request;
 
 class ClientController extends Controller {
     public function index() {
@@ -51,7 +50,6 @@ class ClientController extends Controller {
     }
 
     public function destroy(Client $client) {
-        $client->update(['active' => false]);
         $client->update(['active' => false]);
         return response()->json(['message' => 'Client deactivated successfully']);
     }

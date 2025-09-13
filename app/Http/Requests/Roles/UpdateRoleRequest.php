@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Roles;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdatePermissionRequest extends FormRequest {
+class UpdateRoleRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,7 +19,7 @@ class UpdatePermissionRequest extends FormRequest {
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array {
-        $permissionId = $this->route('permission');
+        $roleId = $this->route('role');
 
         return [
             'name' => [
@@ -27,10 +27,11 @@ class UpdatePermissionRequest extends FormRequest {
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('permissions')->ignore($permissionId),
+                Rule::unique('roles')->ignore($roleId),
             ],
             'displayName' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string|max:500'
+            'permissions' => 'sometimes|array',
+            'permissions.*' => 'exists:permissions,id'
         ];
     }
 }

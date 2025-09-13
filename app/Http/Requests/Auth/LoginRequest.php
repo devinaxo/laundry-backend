@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreatePermissionRequest extends FormRequest {
+class LoginRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,9 +19,8 @@ class CreatePermissionRequest extends FormRequest {
      */
     public function rules(): array {
         return [
-            'name' => 'required|string|max:255|unique:permissions,name',
-            'displayName' => 'required|string|max:255',
-            'description' => 'required|string|max:500'
+            'username' => 'required|string',
+            'password' => 'required|string|min:6',
         ];
     }
 }

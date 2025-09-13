@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePermissionRequest;
-use App\Http\Requests\UpdatePermissionRequest;
+use App\Http\Requests\Permissions\CreatePermissionRequest;
+use App\Http\Requests\Permissions\UpdatePermissionRequest;
 use App\Models\Permission;
 
 class PermissionController extends Controller {
