@@ -29,6 +29,21 @@ class RolePermissionSeeder extends Seeder {
             ['name' => 'createClient', 'displayName' => 'Clientes -> Crear cliente', 'description' => 'Crear nuevos clientes'],
             ['name' => 'editClient', 'displayName' => 'Clientes -> Editar cliente', 'description' => 'Editar clientes existentes'],
             ['name' => 'deleteClient', 'displayName' => 'Clientes -> Eliminar cliente', 'description' => 'Eliminar clientes'],
+
+            ['name' => 'viewCategory', 'displayName' => 'Categorías -> Ver categorías', 'description' => 'Ver lista y detalles de categorías'],
+            ['name' => 'createCategory', 'displayName' => 'Categorías -> Crear categoría', 'description' => 'Crear nuevas categorías'],
+            ['name' => 'editCategory', 'displayName' => 'Categorías -> Editar categoría', 'description' => 'Editar categorías existentes'],
+            ['name' => 'deleteCategory', 'displayName' => 'Categorías -> Eliminar categoría', 'description' => 'Eliminar categorías'],
+
+            ['name' => 'viewSubcategory', 'displayName' => 'Subcategorías -> Ver subcategorías', 'description' => 'Ver lista y detalles de subcategorías'],
+            ['name' => 'createSubcategory', 'displayName' => 'Subcategorías -> Crear subcategoría', 'description' => 'Crear nuevas subcategorías'],
+            ['name' => 'editSubcategory', 'displayName' => 'Subcategorías -> Editar subcategoría', 'description' => 'Editar subcategorías existentes'],
+            ['name' => 'deleteSubcategory', 'displayName' => 'Subcategorías -> Eliminar subcategoría', 'description' => 'Eliminar subcategorías'],
+
+            ['name' => 'viewOrder', 'displayName' => 'Órdenes -> Ver órdenes', 'description' => 'Ver lista y detalles de órdenes'],
+            ['name' => 'createOrder', 'displayName' => 'Órdenes -> Crear orden', 'description' => 'Crear nuevas órdenes'],
+            ['name' => 'editOrder', 'displayName' => 'Órdenes -> Editar orden', 'description' => 'Editar órdenes existentes'],
+            ['name' => 'deleteOrder', 'displayName' => 'Órdenes -> Eliminar orden', 'description' => 'Eliminar órdenes'],
         ];
 
         foreach ($permissions as $permission) {

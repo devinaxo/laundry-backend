@@ -72,26 +72,44 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Category Endpoints
      */
-    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('categories', CategoryController::class)->middleware([
+        'index' => 'permission:viewCategory',
+        'show' => 'permission:viewCategory',
+        'store' => 'permission:createCategory',
+        'update' => 'permission:editCategory',
+        'destroy' => 'permission:deleteCategory',
+    ]);
 
     /**
      * Subcategory Endpoints
      */
-    Route::get('/categories/{category}/subcategories', [SubcategoryController::class, 'getByCategory']);
-    Route::apiResource('subcategories', SubcategoryController::class);
+    Route::get('/categories/{category}/subcategories', [SubcategoryController::class, 'getByCategory'])->middleware(['permission:viewCategory', 'permission:viewSubcategory']);
+    Route::apiResource('subcategories', SubcategoryController::class)->middleware([
+        'index' => 'permission:viewSubcategory',
+        'show' => 'permission:viewSubcategory',
+        'store' => 'permission:createSubcategory',
+        'update' => 'permission:editSubcategory',
+        'destroy' => 'permission:deleteSubcategory',
+    ]);
 
     /**
      * Order Endpoints
      */
-    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus']);
-    Route::apiResource('orders', OrderController::class);
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrder');
+    Route::apiResource('orders', OrderController::class)->middleware([
+        'index' => 'permission:viewOrder',
+        'show' => 'permission:viewOrder',
+        'store' => 'permission:createOrder',
+        'update' => 'permission:editOrder',
+        'destroy' => 'permission:deleteOrder',
+    ]);
 
     /**
      * Order Items Endpoints (nested under orders)
      */
-    Route::get('/orders/{order}/items', [OrderItemController::class, 'index']);
-    Route::post('/orders/{order}/items', [OrderItemController::class, 'store']);
-    Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show']);
-    Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update']);
-    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy']);
+    Route::get('/orders/{order}/items', [OrderItemController::class, 'index'])->middleware('permission:viewOrder');
+    Route::post('/orders/{order}/items', [OrderItemController::class, 'store'])->middleware('permission:createOrder');
+    Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show'])->middleware('permission:viewOrder');
+    Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update'])->middleware('permission:editOrder');
+    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:deleteOrder');
 });
