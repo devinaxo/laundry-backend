@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\Order\NewOrderItemRequest;
+use App\Http\Requests\Order\UpdateOrderItemRequest;
 use App\Models\OrderItem;
 use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Models\Subcategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
@@ -27,27 +28,22 @@ class OrderItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Order $order): JsonResponse
+    public function store(NewOrderItemRequest $request, Order $order): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'subcategory_id' => 'required|exists:subcategories,id',
-                'quantity' => 'required|integer|min:1',
-                'notes' => 'nullable|string|max:500'
-            ]);
 
             DB::beginTransaction();
 
-            $subcategory = \App\Models\Subcategory::find($validated['subcategory_id']);
-            $subtotal = $subcategory->price * $validated['quantity'];
+            $subcategory = Subcategory::find($request->validated()['subcategory_id']);
+            $subtotal = $subcategory->price * $request->validated()['quantity'];
 
             $orderItem = OrderItem::create([
                 'order_id' => $order->id,
-                'subcategory_id' => $validated['subcategory_id'],
-                'quantity' => $validated['quantity'],
+                'subcategory_id' => $request->validated()['subcategory_id'],
+                'quantity' => $request->validated()['quantity'],
                 'unit_price' => $subcategory->price,
                 'subtotal' => $subtotal,
-                'notes' => $validated['notes'] ?? null
+                'notes' => $request->validated()['notes'] ?? null
             ]);
 
             // Update order total
@@ -104,7 +100,7 @@ class OrderItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order, OrderItem $orderItem): JsonResponse
+    public function update(UpdateOrderItemRequest $request, Order $order, OrderItem $orderItem): JsonResponse
     {
         // Verify the item belongs to the order
         if ($orderItem->order_id !== $order->id) {
@@ -115,23 +111,18 @@ class OrderItemController extends Controller
         }
 
         try {
-            $validated = $request->validate([
-                'subcategory_id' => 'required|exists:subcategories,id',
-                'quantity' => 'required|integer|min:1',
-                'notes' => 'nullable|string|max:500'
-            ]);
 
             DB::beginTransaction();
 
-            $subcategory = \App\Models\Subcategory::find($validated['subcategory_id']);
-            $subtotal = $subcategory->price * $validated['quantity'];
+            $subcategory = Subcategory::find($request->validated()['subcategory_id']);
+            $subtotal = $subcategory->price * $request->validated()['quantity'];
 
             $orderItem->update([
-                'subcategory_id' => $validated['subcategory_id'],
-                'quantity' => $validated['quantity'],
+                'subcategory_id' => $request->validated()['subcategory_id'],
+                'quantity' => $request->validated()['quantity'],
                 'unit_price' => $subcategory->price,
                 'subtotal' => $subtotal,
-                'notes' => $validated['notes'] ?? null
+                'notes' => $request->validated()['notes'] ?? null
             ]);
 
             // Update order total

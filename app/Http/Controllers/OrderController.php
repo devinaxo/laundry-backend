@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\Order\NewOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -48,20 +50,9 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(NewOrderRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'reception_date' => 'required|date',
-                'estimated_delivery_date' => 'nullable|date|after:reception_date',
-                'notes' => 'nullable|string|max:1000',
-                'items' => 'required|array|min:1',
-                'items.*.subcategory_id' => 'required|exists:subcategories,id',
-                'items.*.quantity' => 'required|integer|min:1',
-                'items.*.notes' => 'nullable|string|max:500'
-            ]);
-
             DB::beginTransaction();
 
             // Generate order number
@@ -69,19 +60,19 @@ class OrderController extends Controller
 
             // Create order
             $order = Order::create([
-                'client_id' => $validated['client_id'],
+                'client_id' => $request->validated()['client_id'],
                 'order_number' => $orderNumber,
-                'reception_date' => $validated['reception_date'],
-                'estimated_delivery_date' => $validated['estimated_delivery_date'] ?? null,
-                'notes' => $validated['notes'] ?? null,
+                'reception_date' => $request->validated()['reception_date'],
+                'estimated_delivery_date' => $request->validated()['estimated_delivery_date'] ?? null,
+                'notes' => $request->validated()['notes'] ?? null,
                 'status' => 'pending'
             ]);
 
             $total = 0;
 
             // Create order items
-            foreach ($validated['items'] as $itemData) {
-                $subcategory = \App\Models\Subcategory::find($itemData['subcategory_id']);
+            foreach ($request->validated()['items'] as $itemData) {
+                $subcategory = Subcategory::find($itemData['subcategory_id']);
                 $subtotal = $subcategory->price * $itemData['quantity'];
                 $total += $subtotal;
 
@@ -140,17 +131,10 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order): JsonResponse
+    public function update(UpdateOrderRequest $request, Order $order): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'status' => 'nullable|in:pending,in_progress,ready,delivered,cancelled',
-                'estimated_delivery_date' => 'nullable|date|after:reception_date',
-                'actual_delivery_date' => 'nullable|date',
-                'notes' => 'nullable|string|max:1000'
-            ]);
-
-            $order->update($validated);
+            $order->update($request->validated());
             $order->load(['client', 'items.subcategory.category']);
 
             return response()->json([
