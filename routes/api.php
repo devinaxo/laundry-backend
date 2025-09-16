@@ -23,93 +23,90 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * User Endpoints
      */
-    Route::get('/users/all', [UserController::class, 'all'])->middleware('permission:viewUser');
-    Route::patch('/users/{user}/restore', [UserController::class, 'restore'])->middleware('permission:editUser');
+    Route::get('/users/all', [UserController::class, 'all'])->middleware('permission:viewUsers');
+    Route::patch('/users/{user}/restore', [UserController::class, 'restore'])->middleware('permission:editUsers');
     Route::apiResource('users', UserController::class)->middleware([
-        'index' => 'permission:viewUser',
-        'show' => 'permission:viewUser',
-        'store' => 'permission:createUser',
-        'update' => 'permission:editUser',
-        'destroy' => 'permission:deleteUser',
+        'index' => 'permission:viewUsers',
+        'show' => 'permission:viewUsers',
+        'store' => 'permission:createUsers',
+        'update' => 'permission:editUsers',
+        'destroy' => 'permission:deleteUsers',
     ]);
 
     /**
      * Role Endpoints
      */
-    Route::patch('/roles/{role}/permissions', [RoleController::class, 'assignPermissions'])->middleware('permission:editRole');
+    Route::patch('/roles/{role}/permissions', [RoleController::class, 'assignPermissions'])->middleware('permission:editRoles');
     Route::apiResource('roles', RoleController::class)->middleware([
-        'index' => 'permission:viewRole',
-        'show' => 'permission:viewRole',
-        'store' => 'permission:createRole',
-        'update' => 'permission:editRole',
+        'index' => 'permission:viewRoles',
+        'show' => 'permission:viewRoles',
+        'update' => 'permission:editRoles',
     ]);
 
     /**
      * Permission Endpoints
      */
     Route::apiResource('permissions', PermissionController::class)->middleware([
-        'index' => 'permission:viewPermission',
-        'show' => 'permission:viewPermission',
-        'store' => 'permission:createPermission',
-        'update' => 'permission:editPermission',
+        'index' => 'permission:viewRoles',
+        'show' => 'permission:viewRoles',
     ]);
 
     /**
      * Client Endpoints
      */
-    Route::get('/clients/all', [ClientController::class, 'all'])->middleware('permission:viewClient');
-    Route::get('/clients/paginated', [ClientController::class, 'paginated'])->middleware('permission:viewClient');
-    Route::patch('/clients/{client}/restore', [ClientController::class, 'restore'])->middleware('permission:editClient');
+    Route::get('/clients/all', [ClientController::class, 'all'])->middleware('permission:viewClients');
+    Route::get('/clients/paginated', [ClientController::class, 'paginated'])->middleware('permission:viewClients');
+    Route::patch('/clients/{client}/restore', [ClientController::class, 'restore'])->middleware('permission:editClients');
     
     Route::apiResource('clients', ClientController::class)->middleware([
-        'index' => 'permission:viewClient',
-        'show' => 'permission:viewClient',
-        'store' => 'permission:createClient',
-        'update' => 'permission:editClient',
-        'destroy' => 'permission:deleteClient',
+        'index' => 'permission:viewClients',
+        'show' => 'permission:viewClients',
+        'store' => 'permission:createClients',
+        'update' => 'permission:editClients',
+        'destroy' => 'permission:deleteClients',
     ]);
 
     /**
      * Category Endpoints
      */
     Route::apiResource('categories', CategoryController::class)->middleware([
-        'index' => 'permission:viewCategory',
-        'show' => 'permission:viewCategory',
-        'store' => 'permission:createCategory',
-        'update' => 'permission:editCategory',
-        'destroy' => 'permission:deleteCategory',
+        'index' => 'permission:viewCategories',
+        'show' => 'permission:viewCategories',
+        'store' => 'permission:createCategories',
+        'update' => 'permission:editCategories',
+        'destroy' => 'permission:deleteCategories',
     ]);
 
     /**
      * Subcategory Endpoints
      */
-    Route::get('/categories/{category}/subcategories', [SubcategoryController::class, 'getByCategory'])->middleware(['permission:viewCategory', 'permission:viewSubcategory']);
+    Route::get('/categories/{category}/subcategories', [SubcategoryController::class, 'getByCategory'])->middleware(['permission:viewCategories', 'permission:viewSubcategories']);
     Route::apiResource('subcategories', SubcategoryController::class)->middleware([
-        'index' => 'permission:viewSubcategory',
-        'show' => 'permission:viewSubcategory',
-        'store' => 'permission:createSubcategory',
-        'update' => 'permission:editSubcategory',
-        'destroy' => 'permission:deleteSubcategory',
+        'index' => 'permission:viewSubcategories',
+        'show' => 'permission:viewSubcategories',
+        'store' => 'permission:createSubcategories',
+        'update' => 'permission:editSubcategories',
+        'destroy' => 'permission:deleteSubcategories',
     ]);
 
     /**
      * Order Endpoints
      */
-    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrder');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrders');
     Route::apiResource('orders', OrderController::class)->middleware([
-        'index' => 'permission:viewOrder',
-        'show' => 'permission:viewOrder',
-        'store' => 'permission:createOrder',
-        'update' => 'permission:editOrder',
-        'destroy' => 'permission:deleteOrder',
+        'index' => 'permission:viewOrders',
+        'show' => 'permission:viewOrders',
+        'store' => 'permission:createOrders',
+        'update' => 'permission:editOrders',
+        'destroy' => 'permission:deleteOrders',
     ]);
 
     /**
      * Order Items Endpoints (nested under orders)
      */
-    Route::get('/orders/{order}/items', [OrderItemController::class, 'index'])->middleware('permission:viewOrder');
-    Route::post('/orders/{order}/items', [OrderItemController::class, 'store'])->middleware('permission:createOrder');
-    Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show'])->middleware('permission:viewOrder');
-    Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update'])->middleware('permission:editOrder');
-    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:deleteOrder');
+    Route::get('/orders/{order}/items', [OrderItemController::class, 'index'])->middleware('permission:viewOrders');
+    Route::post('/orders/{order}/items', [OrderItemController::class, 'store'])->middleware('permission:createOrders');
+    Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show'])->middleware('permission:viewOrders');
+    Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update'])->middleware('permission:editOrders');
+    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:deleteOrders');
 });

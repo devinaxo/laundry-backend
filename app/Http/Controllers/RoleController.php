@@ -41,6 +41,7 @@ class RoleController extends Controller {
 
         if (isset($validated['permissions'])) {
             $role->permissions()->sync($validated['permissions']);
+            $role->touch();
         }
 
         return response()->json($role->load('permissions'));
@@ -53,6 +54,7 @@ class RoleController extends Controller {
         ]);
 
         $role->permissions()->sync($request->permissions);
+        $role->touch();
 
         return response()->json([
             'message' => 'Permissions assigned successfully',
