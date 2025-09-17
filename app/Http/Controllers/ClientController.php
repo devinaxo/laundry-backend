@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Clients\NewClientRequest;
 use App\Http\Requests\Clients\PaginatedClientRequest;
+use App\Http\Requests\Clients\UpdateClientRequest;
 use App\Models\Client;
 
 class ClientController extends Controller {
@@ -44,7 +45,7 @@ class ClientController extends Controller {
         return response()->json($client, 201);
     }
 
-    public function update(NewClientRequest $request, Client $client) {
+    public function update(UpdateClientRequest $request, Client $client) {
         $client->update($request->validated());
         return response()->json($client);
     }
