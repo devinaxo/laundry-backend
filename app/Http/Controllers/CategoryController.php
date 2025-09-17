@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $categories = Category::with('subcategories')->where('active', true)->get();
+        $categories = Category::all();
         
         return response()->json([
             'success' => true,
