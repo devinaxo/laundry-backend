@@ -92,6 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Order Endpoints
      */
+    Route::get('/orders/paginated', [OrderController::class, 'paginated'])->middleware('permission:viewOrders');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrders');
     Route::apiResource('orders', OrderController::class)->middleware([
         'index' => 'permission:viewOrders',
@@ -105,8 +106,8 @@ Route::middleware('auth:sanctum')->group(function () {
      * Order Items Endpoints (nested under orders)
      */
     Route::get('/orders/{order}/items', [OrderItemController::class, 'index'])->middleware('permission:viewOrders');
-    Route::post('/orders/{order}/items', [OrderItemController::class, 'store'])->middleware('permission:createOrders');
+    Route::post('/orders/{order}/items', [OrderItemController::class, 'store'])->middleware('permission:editOrders');
     Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show'])->middleware('permission:viewOrders');
     Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update'])->middleware('permission:editOrders');
-    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:deleteOrders');
+    Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:editOrders');
 });

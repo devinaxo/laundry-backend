@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\Order\NewOrderRequest;
+use App\Http\Requests\Order\PaginatedOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -11,36 +13,34 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 
-class OrderController extends Controller
-{
+class OrderController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): JsonResponse
-    {
+    public function index(Request $request): JsonResponse {
         $query = Order::with(['client', 'items.subcategory.category']);
-        
+
         // Filter by client if provided
         if ($request->has('client_id')) {
             $query->where('client_id', $request->client_id);
         }
-        
+
         // Filter by status if provided
         if ($request->has('status')) {
             $query->where('status', $request->status);
         }
-        
+
         // Filter by date range
         if ($request->has('fecha_desde')) {
             $query->where('reception_date', '>=', $request->fecha_desde);
         }
-        
+
         if ($request->has('fecha_hasta')) {
             $query->where('reception_date', '<=', $request->fecha_hasta);
         }
-        
+
         $orders = $query->orderBy('created_at', 'desc')->get();
-        
+
         return response()->json([
             'success' => true,
             'data' => $orders
@@ -48,10 +48,48 @@ class OrderController extends Controller
     }
 
     /**
+     * Get paginated orders with filtering
+     */
+    public function paginated(PaginatedOrderRequest $request): JsonResponse {
+        $query = Order::with(['client', 'items.subcategory.category']);
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%")
+                    ->orWhereHas('client', function ($clientQuery) use ($search) {
+                        $clientQuery->where('forename', 'like', "%{$search}%")
+                            ->orWhere('surname', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($request->input('client_id')) {
+            $query->where('client_id', $request->input('client_id'));
+        }
+
+        if ($request->input('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->input('fecha_desde')) {
+            $query->where('reception_date', '>=', $request->input('fecha_desde'));
+        }
+
+        if ($request->input('fecha_hasta')) {
+            $query->where('reception_date', '<=', $request->input('fecha_hasta'));
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')
+            ->paginate($request->input('per_page', 10));
+
+        return response()->json($orders);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(NewOrderRequest $request): JsonResponse
-    {
+    public function store(NewOrderRequest $request): JsonResponse {
         try {
             DB::beginTransaction();
 
@@ -98,7 +136,6 @@ class OrderController extends Controller
                 'message' => 'Pedido creado exitosamente',
                 'data' => $order
             ], 201);
-
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -118,10 +155,9 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order): JsonResponse
-    {
+    public function show(Order $order): JsonResponse {
         $order->load(['client', 'items.subcategory.category']);
-        
+
         return response()->json([
             'success' => true,
             'data' => $order
@@ -131,8 +167,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderRequest $request, Order $order): JsonResponse
-    {
+    public function update(UpdateOrderRequest $request, Order $order): JsonResponse {
         try {
             $order->update($request->validated());
             $order->load(['client', 'items.subcategory.category']);
@@ -142,7 +177,6 @@ class OrderController extends Controller
                 'message' => 'Pedido actualizado exitosamente',
                 'data' => $order
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -155,8 +189,7 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order): JsonResponse
-    {
+    public function destroy(Order $order): JsonResponse {
         if ($order->status === 'delivered') {
             return response()->json([
                 'success' => false,
@@ -175,8 +208,7 @@ class OrderController extends Controller
     /**
      * Update order status
      */
-    public function updateStatus(Request $request, Order $order): JsonResponse
-    {
+    public function updateStatus(Request $request, Order $order): JsonResponse {
         try {
             $validated = $request->validate([
                 'status' => 'required|in:pending,in_progress,ready,delivered,cancelled'
@@ -194,7 +226,6 @@ class OrderController extends Controller
                 'message' => 'Estado del pedido actualizado exitosamente',
                 'data' => $order
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
