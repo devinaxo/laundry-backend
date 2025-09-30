@@ -169,7 +169,16 @@ class OrderController extends Controller {
      */
     public function update(UpdateOrderRequest $request, Order $order): JsonResponse {
         try {
-            $order->update($request->validated());
+            $validated = $request->validated();
+            $order->update($validated);
+            
+            if ($order->status === 'delivered' && isset($validated['status']) && $validated['status'] !== 'delivered') {
+                $order->update(['actual_delivery_date' => null]);
+            }
+            elseif (isset($validated['status']) && $validated['status'] === 'delivered' && !$order->actual_delivery_date) {
+                $order->update(['actual_delivery_date' => now()->toDateString()]);
+            }
+            
             $order->load(['client', 'items.subcategory.category']);
 
             return response()->json([
@@ -213,11 +222,12 @@ class OrderController extends Controller {
             $validated = $request->validate([
                 'status' => 'required|in:pending,in_progress,ready,delivered,cancelled'
             ]);
-
             $order->update($validated);
 
-            // If marking as delivered, set delivery date
-            if ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
+            if ($order->status === 'delivered' && $validated['status'] !== 'delivered') {
+                $order->update(['actual_delivery_date' => null]);
+            }
+            elseif ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
                 $order->update(['actual_delivery_date' => now()->toDateString()]);
             }
 
