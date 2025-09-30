@@ -103,6 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/recent', [OrderController::class, 'recent'])->middleware('permission:viewOrders');
     Route::get('/orders/paginated', [OrderController::class, 'paginated'])->middleware('permission:viewOrders');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrders');
+    Route::put('/orders/{order}/replace', [OrderController::class, 'replace'])->middleware('permission:editOrders');
     Route::apiResource('orders', OrderController::class)->middleware([
         'index' => 'permission:viewOrders',
         'show' => 'permission:viewOrders',
