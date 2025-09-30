@@ -170,9 +170,11 @@ class OrderController extends Controller {
     public function update(UpdateOrderRequest $request, Order $order): JsonResponse {
         try {
             $validated = $request->validated();
+            $originalStatus = $order->status;
+            
             $order->update($validated);
             
-            if ($order->status === 'delivered' && isset($validated['status']) && $validated['status'] !== 'delivered') {
+            if ($originalStatus === 'delivered' && isset($validated['status']) && $validated['status'] !== 'delivered') {
                 $order->update(['actual_delivery_date' => null]);
             }
             elseif (isset($validated['status']) && $validated['status'] === 'delivered' && !$order->actual_delivery_date) {
@@ -222,13 +224,25 @@ class OrderController extends Controller {
             $validated = $request->validate([
                 'status' => 'required|in:pending,in_progress,ready,delivered,cancelled'
             ]);
+            
+            $originalStatus = $order->status; // Store original status before update
             $order->update($validated);
 
-            if ($order->status === 'delivered' && $validated['status'] !== 'delivered') {
+            error_log("=== Order Status Update Debug ===");
+            error_log("Validated data: " . json_encode($validated));
+            error_log("Original status: " . $originalStatus);
+            error_log("New status: " . $validated['status']);
+            error_log("===============================");
+
+            // If status changed from delivered to something else, clear delivery date
+            if ($originalStatus === 'delivered' && $validated['status'] !== 'delivered') {
                 $order->update(['actual_delivery_date' => null]);
+                error_log('✅ Cleared actual_delivery_date - status changed from delivered');
             }
+            // If marking as delivered, set delivery date
             elseif ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
                 $order->update(['actual_delivery_date' => now()->toDateString()]);
+                error_log('✅ Set actual_delivery_date - status changed to delivered');
             }
 
             return response()->json([
