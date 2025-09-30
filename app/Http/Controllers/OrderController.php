@@ -87,6 +87,22 @@ class OrderController extends Controller {
     }
 
     /**
+     * Get the 5 most recent orders
+     */
+    public function recent(): JsonResponse
+    {
+        $recentOrders = Order::with(['client', 'items.subcategory.category'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $recentOrders
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(NewOrderRequest $request): JsonResponse {
@@ -169,7 +185,18 @@ class OrderController extends Controller {
      */
     public function update(UpdateOrderRequest $request, Order $order): JsonResponse {
         try {
-            $order->update($request->validated());
+            $validated = $request->validated();
+            $originalStatus = $order->status;
+            
+            $order->update($validated);
+            
+            if ($originalStatus === 'delivered' && isset($validated['status']) && $validated['status'] !== 'delivered') {
+                $order->update(['actual_delivery_date' => null]);
+            }
+            elseif (isset($validated['status']) && $validated['status'] === 'delivered' && !$order->actual_delivery_date) {
+                $order->update(['actual_delivery_date' => now()->toDateString()]);
+            }
+            
             $order->load(['client', 'items.subcategory.category']);
 
             return response()->json([
@@ -213,12 +240,25 @@ class OrderController extends Controller {
             $validated = $request->validate([
                 'status' => 'required|in:pending,in_progress,ready,delivered,cancelled'
             ]);
-
+            
+            $originalStatus = $order->status; // Store original status before update
             $order->update($validated);
 
+            error_log("=== Order Status Update Debug ===");
+            error_log("Validated data: " . json_encode($validated));
+            error_log("Original status: " . $originalStatus);
+            error_log("New status: " . $validated['status']);
+            error_log("===============================");
+
+            // If status changed from delivered to something else, clear delivery date
+            if ($originalStatus === 'delivered' && $validated['status'] !== 'delivered') {
+                $order->update(['actual_delivery_date' => null]);
+                error_log('✅ Cleared actual_delivery_date - status changed from delivered');
+            }
             // If marking as delivered, set delivery date
-            if ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
+            elseif ($validated['status'] === 'delivered' && !$order->actual_delivery_date) {
                 $order->update(['actual_delivery_date' => now()->toDateString()]);
+                error_log('✅ Set actual_delivery_date - status changed to delivered');
             }
 
             return response()->json([
