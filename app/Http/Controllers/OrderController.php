@@ -87,6 +87,22 @@ class OrderController extends Controller {
     }
 
     /**
+     * Get the 5 most recent orders
+     */
+    public function recent(): JsonResponse
+    {
+        $recentOrders = Order::with(['client', 'items.subcategory.category'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $recentOrders
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(NewOrderRequest $request): JsonResponse {

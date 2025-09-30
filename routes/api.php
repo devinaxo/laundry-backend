@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
@@ -19,6 +20,13 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    /**
+     * Dashboard Endpoints
+     */
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('permission:viewOrders');
+    Route::get('/dashboard/orders-overview', [DashboardController::class, 'ordersOverview'])->middleware('permission:viewOrders');
+    Route::get('/dashboard/weekly-revenue', [DashboardController::class, 'weeklyRevenue'])->middleware('permission:viewOrders');
 
     /**
      * User Endpoints
@@ -92,6 +100,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /**
      * Order Endpoints
      */
+    Route::get('/orders/recent', [OrderController::class, 'recent'])->middleware('permission:viewOrders');
     Route::get('/orders/paginated', [OrderController::class, 'paginated'])->middleware('permission:viewOrders');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrders');
     Route::apiResource('orders', OrderController::class)->middleware([
