@@ -496,13 +496,21 @@ class AnalyticsController extends Controller
                 ->selectRaw('COUNT(*) as total_orders, SUM(total) as total_revenue')
                 ->first();
 
-            $orderGrowth = $previousStats->total_orders > 0 
-                ? (($stats->total_orders - $previousStats->total_orders) / $previousStats->total_orders) * 100 
-                : 0;
+            if ($previousStats->total_orders > 0) {
+                $orderGrowth = (($stats->total_orders - $previousStats->total_orders) / $previousStats->total_orders) * 100;
+            } elseif ($previousStats->total_orders == 0 && $stats->total_orders > 0) {
+                $orderGrowth = 100;
+            } else {
+                $orderGrowth = 0;
+            }
 
-            $revenueGrowth = $previousStats->total_revenue > 0 
-                ? (($stats->total_revenue - $previousStats->total_revenue) / $previousStats->total_revenue) * 100 
-                : 0;
+            if ($previousStats->total_revenue > 0) {
+                $revenueGrowth = (($stats->total_revenue - $previousStats->total_revenue) / $previousStats->total_revenue) * 100;
+            } elseif ($previousStats->total_revenue == 0 && $stats->total_revenue > 0) {
+                $revenueGrowth = 100;
+            } else {
+                $revenueGrowth = 0;
+            }
         } else {
             $orderGrowth = null;
             $revenueGrowth = null;
