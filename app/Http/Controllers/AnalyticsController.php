@@ -25,9 +25,13 @@ class AnalyticsController extends Controller
      */
     public function monthlyStats(Request $request): JsonResponse
     {
-        $year = $request->input('year', date('Y'));
-        $month = $request->input('month', date('m'));
+        $validated = $request->validate([
+            'year' => 'required|integer|digits:4|min:1900|max:2100',
+            'month' => 'required|integer|min:1|max:12',
+        ]);
 
+        $year = $validated['year'] ?? date('Y');
+        $month = $validated['month'] ?? date('m');
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
 
