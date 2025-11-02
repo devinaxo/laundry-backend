@@ -17,6 +17,7 @@ class ReplaceOrderRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'reception_date' => 'required|date',
             'estimated_delivery_date' => 'nullable|date|after:reception_date',
+            'actual_delivery_date' => 'nullable|date|after:reception_date',
             'status' => 'required|in:pending,in_progress,ready,delivered,cancelled',
             'notes' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
