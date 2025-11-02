@@ -76,6 +76,12 @@ class AnalyticsController extends Controller
     public function ordersPerMonth(Request $request): JsonResponse
     {
         $year = $request->input('year', date('Y'));
+        // Validate year: must be a 4-digit integer between 1900 and 2100
+        if (!preg_match('/^\d{4}$/', (string)$year) || (int)$year < 1900 || (int)$year > 2100) {
+            return response()->json([
+                'error' => 'Invalid year. Year must be a 4-digit number between 1900 and 2100.'
+            ], 422);
+        }
 
         $monthlyData = Order::whereYear('reception_date', $year)
             ->selectRaw('
