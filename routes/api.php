@@ -10,6 +10,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\AnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 // Auth Endpoints
@@ -120,4 +121,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'show'])->middleware('permission:viewOrders');
     Route::put('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'update'])->middleware('permission:editOrders');
     Route::delete('/orders/{order}/items/{orderItem}', [OrderItemController::class, 'destroy'])->middleware('permission:editOrders');
+
+    /**
+     * Analytics Endpoints (for admin graphs and statistics)
+     */
+    Route::prefix('analytics')->middleware('permission:viewOrders')->group(function () {
+        Route::get('/overview', [AnalyticsController::class, 'overview']);
+        Route::get('/monthly-stats', [AnalyticsController::class, 'monthlyStats']);
+        Route::get('/orders-per-month', [AnalyticsController::class, 'ordersPerMonth']);
+        Route::get('/yearly-comparison', [AnalyticsController::class, 'yearlyComparison']);
+        Route::get('/daily-stats', [AnalyticsController::class, 'dailyStats']);
+        Route::get('/top-clients', [AnalyticsController::class, 'topClients']);
+        Route::get('/frequent-clients', [AnalyticsController::class, 'mostFrequentClients']);
+        Route::get('/popular-services', [AnalyticsController::class, 'popularServices']);
+        Route::get('/category-revenue', [AnalyticsController::class, 'categoryRevenue']);
+        Route::get('/status-distribution', [AnalyticsController::class, 'statusDistribution']);
+    });
 });
