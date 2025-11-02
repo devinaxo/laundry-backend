@@ -35,12 +35,19 @@ class AnalyticsController extends Controller
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = Carbon::create($year, $month, 1)->endOfMonth();
 
-        $stats = Order::whereBetween('reception_date', [$startDate, $endDate])
+        // Order counts based on reception_date
+        $orderStats = Order::whereBetween('reception_date', [$startDate, $endDate])
             ->selectRaw('
                 COUNT(*) as total_orders,
-                SUM(total) as total_revenue,
-                AVG(total) as average_order_value,
                 COUNT(DISTINCT client_id) as unique_clients
+            ')
+            ->first();
+
+        $revenueStats = Order::whereBetween('actual_delivery_date', [$startDate, $endDate])
+            ->where('status', 'delivered')
+            ->selectRaw('
+                SUM(total) as total_revenue,
+                AVG(total) as average_order_value
             ')
             ->first();
 
@@ -58,10 +65,10 @@ class AnalyticsController extends Controller
                 'end_date' => $endDate->format('Y-m-d'),
             ],
             'stats' => [
-                'total_orders' => $stats->total_orders ?? 0,
-                'total_revenue' => number_format((float)$stats->total_revenue, 2, '.', ''),
-                'average_order_value' => number_format((float)$stats->average_order_value, 2, '.', ''),
-                'unique_clients' => $stats->unique_clients ?? 0,
+                'total_orders' => $orderStats->total_orders ?? 0,
+                'total_revenue' => number_format((float)($revenueStats->total_revenue ?? 0), 2, '.', ''),
+                'average_order_value' => number_format((float)($revenueStats->average_order_value ?? 0), 2, '.', ''),
+                'unique_clients' => $orderStats->unique_clients ?? 0,
             ],
             'status_breakdown' => $statusBreakdown,
         ]);
@@ -76,35 +83,44 @@ class AnalyticsController extends Controller
     public function ordersPerMonth(Request $request): JsonResponse
     {
         $year = $request->input('year', date('Y'));
-        // Validate year: must be a 4-digit integer between 1900 and 2100
         if (!preg_match('/^\d{4}$/', (string)$year) || (int)$year < 1900 || (int)$year > 2100) {
             return response()->json([
                 'error' => 'Invalid year. Year must be a 4-digit number between 1900 and 2100.'
             ], 422);
         }
 
-        $monthlyData = Order::whereYear('reception_date', $year)
+        $monthlyOrders = Order::whereYear('reception_date', $year)
             ->selectRaw('
                 MONTH(reception_date) as month,
-                COUNT(*) as total_orders,
+                COUNT(*) as total_orders
+            ')
+            ->groupBy(DB::raw('MONTH(reception_date)'))
+            ->get()
+            ->keyBy('month');
+
+        $monthlyRevenue = Order::whereYear('actual_delivery_date', $year)
+            ->where('status', 'delivered')
+            ->selectRaw('
+                MONTH(actual_delivery_date) as month,
                 SUM(total) as total_revenue,
                 AVG(total) as average_order_value
             ')
-            ->groupBy(DB::raw('MONTH(reception_date)'))
-            ->orderBy('month')
-            ->get();
+            ->groupBy(DB::raw('MONTH(actual_delivery_date)'))
+            ->get()
+            ->keyBy('month');
 
         // Fill in missing months with zeros
-        $result = collect(range(1, 12))->map(function ($month) use ($monthlyData) {
-            $data = $monthlyData->firstWhere('month', $month);
+        $result = collect(range(1, 12))->map(function ($month) use ($monthlyOrders, $monthlyRevenue) {
+            $orderData = $monthlyOrders->get($month);
+            $revenueData = $monthlyRevenue->get($month);
             
             return [
                 'month' => $month,
                 'month_name' => Carbon::create(null, $month, 1)->translatedFormat('F'),
                 'month_short' => Carbon::create(null, $month, 1)->translatedFormat('M'),
-                'total_orders' => $data ? $data->total_orders : 0,
-                'total_revenue' => $data ? number_format((float)$data->total_revenue, 2, '.', '') : '0.00',
-                'average_order_value' => $data ? number_format((float)$data->average_order_value, 2, '.', '') : '0.00',
+                'total_orders' => $orderData ? $orderData->total_orders : 0,
+                'total_revenue' => $revenueData ? number_format((float)$revenueData->total_revenue, 2, '.', '') : '0.00',
+                'average_order_value' => $revenueData ? number_format((float)$revenueData->average_order_value, 2, '.', '') : '0.00',
             ];
         });
 
@@ -127,9 +143,13 @@ class AnalyticsController extends Controller
         $comparison = [];
         
         foreach ($years as $year) {
-            $yearlyStats = Order::whereYear('reception_date', $year)
+            $orderStats = Order::whereYear('reception_date', $year)
+                ->selectRaw('COUNT(*) as total_orders')
+                ->first();
+
+            $revenueStats = Order::whereYear('actual_delivery_date', $year)
+                ->where('status', 'delivered')
                 ->selectRaw('
-                    COUNT(*) as total_orders,
                     SUM(total) as total_revenue,
                     AVG(total) as average_order_value
                 ')
@@ -137,9 +157,9 @@ class AnalyticsController extends Controller
 
             $comparison[] = [
                 'year' => $year,
-                'total_orders' => $yearlyStats->total_orders ?? 0,
-                'total_revenue' => number_format((float)$yearlyStats->total_revenue, 2, '.', ''),
-                'average_order_value' => number_format((float)$yearlyStats->average_order_value, 2, '.', ''),
+                'total_orders' => $orderStats->total_orders ?? 0,
+                'total_revenue' => number_format((float)($revenueStats->total_revenue ?? 0), 2, '.', ''),
+                'average_order_value' => number_format((float)($revenueStats->average_order_value ?? 0), 2, '.', ''),
             ];
         }
 
@@ -215,19 +235,19 @@ class AnalyticsController extends Controller
                 'clients.surname',
                 'clients.phone',
                 DB::raw('COUNT(orders.id) as total_orders'),
-                DB::raw('SUM(orders.total) as total_spent'),
-                DB::raw('AVG(orders.total) as average_order_value'),
-                DB::raw('MAX(orders.reception_date) as last_order_date')
+                DB::raw('SUM(CASE WHEN orders.status = "delivered" THEN orders.total ELSE 0 END) as total_spent'),
+                DB::raw('AVG(CASE WHEN orders.status = "delivered" THEN orders.total ELSE NULL END) as average_order_value'),
+                DB::raw('MAX(orders.actual_delivery_date) as last_delivery_date')
             )
             ->join('orders', 'clients.id', '=', 'orders.client_id')
             ->groupBy('clients.id', 'clients.forename', 'clients.surname', 'clients.phone');
 
         if ($startDate) {
-            $query->where('orders.reception_date', '>=', $startDate);
+            $query->where('orders.actual_delivery_date', '>=', $startDate);
         }
 
         if ($endDate) {
-            $query->where('orders.reception_date', '<=', $endDate);
+            $query->where('orders.actual_delivery_date', '<=', $endDate);
         }
 
         $topClients = $query
@@ -243,7 +263,7 @@ class AnalyticsController extends Controller
                     'total_orders' => $client->total_orders,
                     'total_spent' => number_format((float)$client->total_spent, 2, '.', ''),
                     'average_order_value' => number_format((float)$client->average_order_value, 2, '.', ''),
-                    'last_order_date' => $client->last_order_date,
+                    'last_delivery_date' => $client->last_delivery_date,
                 ];
             });
 
@@ -276,7 +296,7 @@ class AnalyticsController extends Controller
                 'clients.surname',
                 'clients.phone',
                 DB::raw('COUNT(orders.id) as total_orders'),
-                DB::raw('SUM(orders.total) as total_spent'),
+                DB::raw('SUM(CASE WHEN orders.status = "delivered" THEN orders.total ELSE 0 END) as total_spent'),
                 DB::raw('MAX(orders.reception_date) as last_order_date'),
                 DB::raw('MIN(orders.reception_date) as first_order_date')
             )
@@ -339,18 +359,18 @@ class AnalyticsController extends Controller
                 'categories.name as category_name',
                 DB::raw('COUNT(order_items.id) as times_ordered'),
                 DB::raw('SUM(order_items.quantity) as total_quantity'),
-                DB::raw('SUM(order_items.subtotal) as total_revenue')
+                DB::raw('SUM(CASE WHEN orders.status = "delivered" THEN order_items.subtotal ELSE 0 END) as total_revenue')
             )
             ->join('subcategories', 'order_items.subcategory_id', '=', 'subcategories.id')
             ->join('categories', 'subcategories.category_id', '=', 'categories.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id');
 
         if ($startDate) {
-            $query->where('orders.reception_date', '>=', $startDate);
+            $query->where('orders.actual_delivery_date', '>=', $startDate);
         }
 
         if ($endDate) {
-            $query->where('orders.reception_date', '<=', $endDate);
+            $query->where('orders.actual_delivery_date', '<=', $endDate);
         }
 
         $popularServices = $query
@@ -395,25 +415,46 @@ class AnalyticsController extends Controller
 
         $startDate = $validated['start_date'] ?? Carbon::now()->subDays(30)->format('Y-m-d');
         $endDate = $validated['end_date'] ?? Carbon::now()->format('Y-m-d');
-        $dailyData = Order::whereBetween('reception_date', [$startDate, $endDate])
+
+        $dailyOrders = Order::whereBetween('reception_date', [$startDate, $endDate])
             ->selectRaw('
                 DATE(reception_date) as date,
-                COUNT(*) as total_orders,
+                COUNT(*) as total_orders
+            ')
+            ->groupBy(DB::raw('DATE(reception_date)'))
+            ->get()
+            ->keyBy('date');
+
+        $dailyRevenue = Order::whereBetween('actual_delivery_date', [$startDate, $endDate])
+            ->where('status', 'delivered')
+            ->selectRaw('
+                DATE(actual_delivery_date) as date,
                 SUM(total) as total_revenue,
                 AVG(total) as average_order_value
             ')
-            ->groupBy(DB::raw('DATE(reception_date)'))
-            ->orderBy('date')
+            ->groupBy(DB::raw('DATE(actual_delivery_date)'))
             ->get()
-            ->map(function ($day) {
-                return [
-                    'date' => $day->date,
-                    'day_name' => Carbon::parse($day->date)->translatedFormat('l'),
-                    'total_orders' => $day->total_orders,
-                    'total_revenue' => number_format((float)$day->total_revenue, 2, '.', ''),
-                    'average_order_value' => number_format((float)$day->average_order_value, 2, '.', ''),
-                ];
-            });
+            ->keyBy('date');
+
+        $period = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+        $dailyData = collect();
+
+        while ($period->lte($end)) {
+            $dateStr = $period->format('Y-m-d');
+            $orderData = $dailyOrders->get($dateStr);
+            $revenueData = $dailyRevenue->get($dateStr);
+
+            $dailyData->push([
+                'date' => $dateStr,
+                'day_name' => $period->translatedFormat('l'),
+                'total_orders' => $orderData ? $orderData->total_orders : 0,
+                'total_revenue' => $revenueData ? number_format((float)$revenueData->total_revenue, 2, '.', '') : '0.00',
+                'average_order_value' => $revenueData ? number_format((float)$revenueData->average_order_value, 2, '.', '') : '0.00',
+            ]);
+
+            $period->addDay();
+        }
 
         return response()->json([
             'period' => [
@@ -436,7 +477,7 @@ class AnalyticsController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
-        $query = Order::select('status', DB::raw('COUNT(*) as count'), DB::raw('SUM(total) as revenue'));
+        $query = Order::select('status', DB::raw('COUNT(*) as count'));
 
         if ($startDate) {
             $query->where('reception_date', '>=', $startDate);
@@ -448,14 +489,32 @@ class AnalyticsController extends Controller
 
         $distribution = $query
             ->groupBy('status')
+            ->get();
+
+        $revenueQuery = Order::select('status', DB::raw('SUM(total) as revenue'))
+            ->where('status', 'delivered');
+
+        if ($startDate) {
+            $revenueQuery->where('actual_delivery_date', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $revenueQuery->where('actual_delivery_date', '<=', $endDate);
+        }
+
+        $revenueData = $revenueQuery
+            ->groupBy('status')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'status' => $item->status,
-                    'count' => $item->count,
-                    'revenue' => number_format((float)$item->revenue, 2, '.', ''),
-                ];
-            });
+            ->keyBy('status');
+
+        $distribution = $distribution->map(function ($item) use ($revenueData) {
+            $revenue = $revenueData->get($item->status);
+            return [
+                'status' => $item->status,
+                'count' => $item->count,
+                'revenue' => number_format((float)($revenue->revenue ?? 0), 2, '.', ''),
+            ];
+        });
 
         $total = $distribution->sum('count');
 
@@ -497,11 +556,24 @@ class AnalyticsController extends Controller
             $query->where('reception_date', '<=', $endDate);
         }
 
-        $stats = $query->selectRaw('
+        $orderStats = $query->selectRaw('
             COUNT(*) as total_orders,
+            COUNT(DISTINCT client_id) as unique_clients
+        ')->first();
+
+        $revenueQuery = Order::where('status', 'delivered');
+
+        if ($startDate) {
+            $revenueQuery->where('actual_delivery_date', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $revenueQuery->where('actual_delivery_date', '<=', $endDate);
+        }
+
+        $revenueStats = $revenueQuery->selectRaw('
             SUM(total) as total_revenue,
             AVG(total) as average_order_value,
-            COUNT(DISTINCT client_id) as unique_clients,
             MAX(total) as highest_order,
             MIN(total) as lowest_order
         ')->first();
@@ -512,21 +584,29 @@ class AnalyticsController extends Controller
             $previousStartDate = Carbon::parse($startDate)->subDays($periodLength + 1)->format('Y-m-d');
             $previousEndDate = Carbon::parse($startDate)->subDay()->format('Y-m-d');
 
-            $previousStats = Order::whereBetween('reception_date', [$previousStartDate, $previousEndDate])
-                ->selectRaw('COUNT(*) as total_orders, SUM(total) as total_revenue')
+            $previousOrderStats = Order::whereBetween('reception_date', [$previousStartDate, $previousEndDate])
+                ->selectRaw('COUNT(*) as total_orders')
                 ->first();
 
-            if ($previousStats->total_orders > 0) {
-                $orderGrowth = (($stats->total_orders - $previousStats->total_orders) / $previousStats->total_orders) * 100;
-            } elseif ($previousStats->total_orders == 0 && $stats->total_orders > 0) {
+            $previousRevenueStats = Order::whereBetween('actual_delivery_date', [$previousStartDate, $previousEndDate])
+                ->where('status', 'delivered')
+                ->selectRaw('SUM(total) as total_revenue')
+                ->first();
+
+            if ($previousOrderStats->total_orders > 0) {
+                $orderGrowth = (($orderStats->total_orders - $previousOrderStats->total_orders) / $previousOrderStats->total_orders) * 100;
+            } elseif ($previousOrderStats->total_orders == 0 && $orderStats->total_orders > 0) {
                 $orderGrowth = 100;
             } else {
                 $orderGrowth = 0;
             }
 
-            if ($previousStats->total_revenue > 0) {
-                $revenueGrowth = (($stats->total_revenue - $previousStats->total_revenue) / $previousStats->total_revenue) * 100;
-            } elseif ($previousStats->total_revenue == 0 && $stats->total_revenue > 0) {
+            $prevRevenue = $previousRevenueStats->total_revenue ?? 0;
+            $currentRevenue = $revenueStats->total_revenue ?? 0;
+
+            if ($prevRevenue > 0) {
+                $revenueGrowth = (($currentRevenue - $prevRevenue) / $prevRevenue) * 100;
+            } elseif ($prevRevenue == 0 && $currentRevenue > 0) {
                 $revenueGrowth = 100;
             } else {
                 $revenueGrowth = 0;
@@ -542,12 +622,12 @@ class AnalyticsController extends Controller
                 'end_date' => $endDate,
             ],
             'metrics' => [
-                'total_orders' => $stats->total_orders ?? 0,
-                'total_revenue' => number_format((float)$stats->total_revenue, 2, '.', ''),
-                'average_order_value' => number_format((float)$stats->average_order_value, 2, '.', ''),
-                'unique_clients' => $stats->unique_clients ?? 0,
-                'highest_order' => number_format((float)$stats->highest_order, 2, '.', ''),
-                'lowest_order' => number_format((float)$stats->lowest_order, 2, '.', ''),
+                'total_orders' => $orderStats->total_orders ?? 0,
+                'total_revenue' => number_format((float)($revenueStats->total_revenue ?? 0), 2, '.', ''),
+                'average_order_value' => number_format((float)($revenueStats->average_order_value ?? 0), 2, '.', ''),
+                'unique_clients' => $orderStats->unique_clients ?? 0,
+                'highest_order' => number_format((float)($revenueStats->highest_order ?? 0), 2, '.', ''),
+                'lowest_order' => number_format((float)($revenueStats->lowest_order ?? 0), 2, '.', ''),
             ],
             'growth' => [
                 'orders_growth_percentage' => $orderGrowth !== null ? round($orderGrowth, 2) : null,
@@ -571,19 +651,19 @@ class AnalyticsController extends Controller
                 'categories.id',
                 'categories.name as category_name',
                 DB::raw('COUNT(order_items.id) as total_items'),
-                DB::raw('SUM(order_items.subtotal) as total_revenue'),
-                DB::raw('AVG(order_items.subtotal) as average_item_value')
+                DB::raw('SUM(CASE WHEN orders.status = "delivered" THEN order_items.subtotal ELSE 0 END) as total_revenue'),
+                DB::raw('AVG(CASE WHEN orders.status = "delivered" THEN order_items.subtotal ELSE NULL END) as average_item_value')
             )
             ->join('subcategories', 'order_items.subcategory_id', '=', 'subcategories.id')
             ->join('categories', 'subcategories.category_id', '=', 'categories.id')
             ->join('orders', 'order_items.order_id', '=', 'orders.id');
 
         if ($startDate) {
-            $query->where('orders.reception_date', '>=', $startDate);
+            $query->where('orders.actual_delivery_date', '>=', $startDate);
         }
 
         if ($endDate) {
-            $query->where('orders.reception_date', '<=', $endDate);
+            $query->where('orders.actual_delivery_date', '<=', $endDate);
         }
 
         $categoryData = $query

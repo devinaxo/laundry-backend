@@ -230,6 +230,7 @@ class OrderController extends Controller {
                 'client_id' => $validated['client_id'],
                 'reception_date' => $validated['reception_date'],
                 'estimated_delivery_date' => $validated['estimated_delivery_date'] ?? null,
+                'actual_delivery_date' => $validated['actual_delivery_date'] ?? null,
                 'status' => $newStatus,
                 'notes' => $validated['notes'] ?? null,
             ]);
@@ -238,7 +239,7 @@ class OrderController extends Controller {
                 $order->update(['actual_delivery_date' => null]);
                 error_log('✅ Cleared actual_delivery_date - status changed from delivered to ' . $newStatus);
             }
-            elseif ($newStatus === 'delivered' && !$order->actual_delivery_date) {
+            elseif ($newStatus === 'delivered' && !$order->actual_delivery_date && !isset($validated['actual_delivery_date'])) {
                 $order->update(['actual_delivery_date' => now()->toDateString()]);
                 error_log('✅ Set actual_delivery_date - status changed to delivered');
             }
