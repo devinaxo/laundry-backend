@@ -202,7 +202,10 @@ class AnalyticsController extends Controller
      */
     public function topClients(Request $request): JsonResponse
     {
-        $limit = $request->input('limit', 10);
+        $validated = $request->validate([
+            'limit' => 'integer|min:1|max:100',
+        ]);
+        $limit = $validated['limit'] ?? 10;
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
