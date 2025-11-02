@@ -388,9 +388,13 @@ class AnalyticsController extends Controller
      */
     public function dailyStats(Request $request): JsonResponse
     {
-        $startDate = $request->input('start_date', Carbon::now()->subDays(30)->format('Y-m-d'));
-        $endDate = $request->input('end_date', Carbon::now()->format('Y-m-d'));
+        $validated = $request->validate([
+            'start_date' => ['nullable', 'date_format:Y-m-d'],
+            'end_date' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:start_date'],
+        ]);
 
+        $startDate = $validated['start_date'] ?? Carbon::now()->subDays(30)->format('Y-m-d');
+        $endDate = $validated['end_date'] ?? Carbon::now()->format('Y-m-d');
         $dailyData = Order::whereBetween('reception_date', [$startDate, $endDate])
             ->selectRaw('
                 DATE(reception_date) as date,
