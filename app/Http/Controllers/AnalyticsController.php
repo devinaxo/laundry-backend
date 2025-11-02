@@ -328,6 +328,8 @@ class AnalyticsController extends Controller
     public function popularServices(Request $request): JsonResponse
     {
         $limit = $request->input('limit', 10);
+        // Validate and clamp the limit to a reasonable maximum (e.g., 100)
+        $limit = (is_numeric($limit) && (int)$limit > 0) ? min((int)$limit, 100) : 10;
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
