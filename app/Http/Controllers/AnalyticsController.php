@@ -265,7 +265,8 @@ class AnalyticsController extends Controller
      */
     public function mostFrequentClients(Request $request): JsonResponse
     {
-        $limit = $request->input('limit', 10);
+        $limit = (int) $request->input('limit', 10);
+        $limit = max(1, min($limit, 100)); // Enforce limit between 1 and 100
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
