@@ -8,16 +8,12 @@ use App\Models\OrderItem;
 use App\Models\Subcategory;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-use Faker\Factory as Faker;
 
-class OrderSeeder extends Seeder
-{
+class OrderSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
-        $faker = Faker::create();
+    public function run(): void {
         $clients = Client::where('active', true)->get();
         $subcategories = Subcategory::where('active', true)->get();
 
@@ -30,12 +26,12 @@ class OrderSeeder extends Seeder
         $clientIds = $clients->pluck('id')->toArray();
 
         // Helper function to get random subcategory by name pattern
-        $getSubcategory = function($name) use ($subcategories) {
+        $getSubcategory = function ($name) use ($subcategories) {
             return $subcategories->where('name', $name)->first();
         };
-        
+
         // Helper function to get client ID by index (0-based)
-        $getClientId = function($index) use ($clientIds) {
+        $getClientId = function ($index) use ($clientIds) {
             return $clientIds[$index] ?? null;
         };
 
@@ -1532,28 +1528,29 @@ class OrderSeeder extends Seeder
         foreach ($orders as $orderData) {
             $items = $orderData['items'];
             unset($orderData['items']);
-            
+
             // Get the actual client ID from the index
             $clientIndex = $orderData['client_index'];
             unset($orderData['client_index']);
             $clientId = $getClientId($clientIndex);
-            
+
             if (!$clientId) {
                 continue; // Skip if client doesn't exist
             }
-            
+
             // Add random payment type if not specified
             if (!isset($orderData['payment_type'])) {
-                $orderData['payment_type'] = $faker->randomElement(['cash', 'transfer']);
+                $options = ['cash', 'transfer'];
+                $orderData['payment_type'] = $options[array_rand($options)];
             }
-            
+
             // Create the order without total first
             $order = Order::create(array_merge($orderData, ['client_id' => $clientId, 'total' => 0]));
-            
+
             // Create order items
             foreach ($items as $itemData) {
                 $subcategory = $getSubcategory($itemData['subcategory']);
-                
+
                 if ($subcategory) {
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -1565,7 +1562,7 @@ class OrderSeeder extends Seeder
                     ]);
                 }
             }
-            
+
             // Update order total
             $order->total = $order->calculateTotal();
             $order->save();
