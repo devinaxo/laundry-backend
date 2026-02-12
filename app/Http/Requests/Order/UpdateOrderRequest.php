@@ -22,7 +22,8 @@ class UpdateOrderRequest extends FormRequest {
             'status' => 'nullable|in:pending,in_progress,ready,delivered,cancelled',
             'estimated_delivery_date' => 'nullable|date|after:reception_date',
             'actual_delivery_date' => 'nullable|date',
-            'notes' => 'nullable|string|max:1000'
+            'notes' => 'nullable|string|max:1000',
+            'payment_type' => 'nullable|in:cash,transfer'
         ];
     }
 }

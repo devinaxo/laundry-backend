@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller {
     /**
@@ -350,6 +351,155 @@ class OrderController extends Controller {
                 'message' => 'Error de validación',
                 'errors' => $e->errors()
             ], 422);
+        }
+    }
+
+    /**
+     * Upload payment proof file for an order
+     */
+    public function uploadPaymentProof(Request $request, Order $order): JsonResponse
+    {
+        try {
+            $request->validate([
+                'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120', // Max 5MB
+                'payment_type' => 'required|in:cash,transfer'
+            ]);
+
+            // Validate that payment type is transfer
+            if ($request->payment_type !== 'transfer') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Solo se pueden subir comprobantes para pagos por transferencia'
+                ], 422);
+            }
+
+            // Delete old file if exists
+            if ($order->payment_proof_path) {
+                try {
+                    Storage::disk('payment_proofs')->delete($order->payment_proof_path);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete old payment proof: ' . $e->getMessage());
+                }
+            }
+
+            // Generate unique filename
+            $file = $request->file('payment_proof');
+            $extension = $file->getClientOriginalExtension();
+            $filename = 'payment_proof_' . $order->order_number . '_' . time() . '.' . $extension;
+            
+            // Upload file to FTPS
+            $contents = file_get_contents($file->getRealPath());
+            $uploaded = Storage::disk('payment_proofs')->put($filename, $contents);
+
+            if (!$uploaded) {
+                throw new \Exception('Failed to upload file to FTP server');
+            }
+
+            // Update order
+            $order->update([
+                'payment_type' => $request->payment_type,
+                'payment_proof_path' => $filename
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comprobante de pago subido exitosamente',
+                'data' => [
+                    'payment_proof_path' => $filename,
+                    'payment_type' => $order->payment_type
+                ]
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('FTPS upload failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al subir el comprobante: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get/Download payment proof file for an order
+     */
+    public function getPaymentProof(Order $order): JsonResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        try {
+            if (!$order->payment_proof_path) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Este pedido no tiene comprobante de pago'
+                ], 404);
+            }
+
+            if (!Storage::disk('payment_proofs')->exists($order->payment_proof_path)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El comprobante de pago no se encuentra en el servidor'
+                ], 404);
+            }
+
+            // Get the file from FTPS
+            $file = Storage::disk('payment_proofs')->get($order->payment_proof_path);
+            $mimeType = Storage::disk('payment_proofs')->mimeType($order->payment_proof_path);
+            $filename = basename($order->payment_proof_path);
+
+            // Return file as download
+            return response()->streamDownload(function () use ($file) {
+                echo $file;
+            }, $filename, [
+                'Content-Type' => $mimeType,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('FTPS download failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener el comprobante: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete payment proof file for an order
+     */
+    public function deletePaymentProof(Order $order): JsonResponse
+    {
+        try {
+            if (!$order->payment_proof_path) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Este pedido no tiene comprobante de pago'
+                ], 404);
+            }
+
+            // Delete file from FTPS
+            if (Storage::disk('payment_proofs')->exists($order->payment_proof_path)) {
+                Storage::disk('payment_proofs')->delete($order->payment_proof_path);
+            }
+
+            // Clear payment proof path
+            $order->update([
+                'payment_proof_path' => null
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comprobante de pago eliminado exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('FTPS delete failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el comprobante: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

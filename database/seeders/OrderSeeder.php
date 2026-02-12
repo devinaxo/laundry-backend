@@ -1540,6 +1540,11 @@ class OrderSeeder extends Seeder
                 continue; // Skip if client doesn't exist
             }
             
+            // Add random payment type if not specified
+            if (!isset($orderData['payment_type'])) {
+                $orderData['payment_type'] = fake()->randomElement(['cash', 'transfer']);
+            }
+            
             // Create the order without total first
             $order = Order::create(array_merge($orderData, ['client_id' => $clientId, 'total' => 0]));
             

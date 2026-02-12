@@ -23,6 +23,7 @@ class NewOrderRequest extends FormRequest {
             'reception_date' => 'required|date',
             'estimated_delivery_date' => 'nullable|date|after:reception_date',
             'notes' => 'nullable|string|max:1000',
+            'payment_type' => 'nullable|in:cash,transfer',
             'items' => 'required|array|min:1',
             'items.*.subcategory_id' => 'required|exists:subcategories,id',
             'items.*.quantity' => 'required|integer|min:1',

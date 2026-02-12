@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'payment_proofs' => [
+            'driver' => 'local',
+            'root' => storage_path('app/payment-proofs'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
     ],
 
     /*
