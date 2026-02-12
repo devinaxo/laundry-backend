@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Subcategory;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class OrderSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
         $clients = Client::where('active', true)->get();
         $subcategories = Subcategory::where('active', true)->get();
 
@@ -1542,7 +1544,7 @@ class OrderSeeder extends Seeder
             
             // Add random payment type if not specified
             if (!isset($orderData['payment_type'])) {
-                $orderData['payment_type'] = fake()->randomElement(['cash', 'transfer']);
+                $orderData['payment_type'] = $faker->randomElement(['cash', 'transfer']);
             }
             
             // Create the order without total first
