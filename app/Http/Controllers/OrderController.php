@@ -121,6 +121,7 @@ class OrderController extends Controller {
                 'reception_date' => $request->validated()['reception_date'],
                 'estimated_delivery_date' => $request->validated()['estimated_delivery_date'] ?? null,
                 'notes' => $request->validated()['notes'] ?? null,
+                'payment_type' => $request->validated()['payment_type'] ?? 'cash',
                 'status' => 'pending'
             ]);
 
@@ -190,6 +191,23 @@ class OrderController extends Controller {
             $validated = $request->validated();
             $originalStatus = $order->status;
             
+            // Check if payment type is changing from transfer to cash
+            if (isset($validated['payment_type']) && 
+                $validated['payment_type'] === 'cash' && 
+                $order->payment_type === 'transfer' && 
+                $order->payment_proof_path) {
+                
+                // Delete the payment proof file
+                try {
+                    Storage::disk('payment_proofs')->delete($order->payment_proof_path);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete payment proof when changing to cash: ' . $e->getMessage());
+                }
+                
+                // Clear payment proof path
+                $validated['payment_proof_path'] = null;
+            }
+            
             $order->update($validated);
             
             if ($originalStatus === 'delivered' && isset($validated['status']) && $validated['status'] !== 'delivered') {
@@ -226,6 +244,18 @@ class OrderController extends Controller {
             $validated = $request->validated();
             $originalStatus = $order->status;
             $newStatus = $validated['status'];
+            
+            $newPaymentType = $validated['payment_type'] ?? $order->payment_type;
+            if ($newPaymentType === 'cash' && 
+                $order->payment_type === 'transfer' && 
+                $order->payment_proof_path) {
+                
+                try {
+                    Storage::disk('payment_proofs')->delete($order->payment_proof_path);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete payment proof when changing to cash: ' . $e->getMessage());
+                }
+            }
 
             $order->update([
                 'client_id' => $validated['client_id'],
@@ -234,6 +264,8 @@ class OrderController extends Controller {
                 'actual_delivery_date' => $validated['actual_delivery_date'] ?? null,
                 'status' => $newStatus,
                 'notes' => $validated['notes'] ?? null,
+                'payment_type' => $newPaymentType,
+                'payment_proof_path' => ($newPaymentType === 'cash') ? null : $order->payment_proof_path,
             ]);
 
             if ($originalStatus === 'delivered' && $newStatus !== 'delivered' && $order->actual_delivery_date) {
