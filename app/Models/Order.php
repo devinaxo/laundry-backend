@@ -13,6 +13,8 @@ class Order extends Model
         'order_number',
         'status',
         'total',
+        'payment_type',
+        'payment_proof_path',
         'reception_date',
         'estimated_delivery_date',
         'actual_delivery_date',

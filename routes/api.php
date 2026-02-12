@@ -107,6 +107,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/paginated', [OrderController::class, 'paginated'])->middleware('permission:viewOrders');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->middleware('permission:editOrders');
     Route::put('/orders/{order}/replace', [OrderController::class, 'replace'])->middleware('permission:editOrders');
+    
+    // Payment proof endpoints
+    Route::post('/orders/{order}/payment-proof', [OrderController::class, 'uploadPaymentProof'])->middleware('permission:editOrders');
+    Route::get('/orders/{order}/payment-proof', [OrderController::class, 'getPaymentProof'])->middleware('permission:viewOrders');
+    Route::delete('/orders/{order}/payment-proof', [OrderController::class, 'deletePaymentProof'])->middleware('permission:editOrders');
+    
     Route::apiResource('orders', OrderController::class)->middleware([
         'index' => 'permission:viewOrders',
         'show' => 'permission:viewOrders',
