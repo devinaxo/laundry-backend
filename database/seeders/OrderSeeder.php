@@ -39,7 +39,7 @@ class OrderSeeder extends Seeder {
             // Order 1 - María González - Completed
             [
                 'client_index' => 0,
-                'order_number' => 'ORD-2026-001',
+                'order_number' => 'PED-2026-001',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(60),
                 'created_at' => Carbon::now()->subDays(60),
@@ -54,7 +54,7 @@ class OrderSeeder extends Seeder {
             // Order 2 - Carlos Rodríguez
             [
                 'client_index' => 1,
-                'order_number' => 'ORD-2026-002',
+                'order_number' => 'PED-2026-002',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(58),
                 'created_at' => Carbon::now()->subDays(58),
@@ -69,7 +69,7 @@ class OrderSeeder extends Seeder {
             // Order 3 - Ana Martínez
             [
                 'client_index' => 2,
-                'order_number' => 'ORD-2026-003',
+                'order_number' => 'PED-2026-003',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(55),
                 'created_at' => Carbon::now()->subDays(55),
@@ -84,7 +84,7 @@ class OrderSeeder extends Seeder {
             // Order 4 - Roberto López
             [
                 'client_index' => 3,
-                'order_number' => 'ORD-2026-004',
+                'order_number' => 'PED-2026-004',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(52),
                 'created_at' => Carbon::now()->subDays(52),
@@ -99,7 +99,7 @@ class OrderSeeder extends Seeder {
             // Order 5 - Laura Fernández
             [
                 'client_index' => 4,
-                'order_number' => 'ORD-2026-005',
+                'order_number' => 'PED-2026-005',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(50),
                 'created_at' => Carbon::now()->subDays(50),
@@ -114,7 +114,7 @@ class OrderSeeder extends Seeder {
             // Order 6 - Jorge Sánchez
             [
                 'client_index' => 5,
-                'order_number' => 'ORD-2026-006',
+                'order_number' => 'PED-2026-006',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(48),
                 'created_at' => Carbon::now()->subDays(48),
@@ -130,7 +130,7 @@ class OrderSeeder extends Seeder {
             // Order 7 - Patricia Díaz
             [
                 'client_index' => 6,
-                'order_number' => 'ORD-2026-007',
+                'order_number' => 'PED-2026-007',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(46),
                 'created_at' => Carbon::now()->subDays(46),
@@ -145,7 +145,7 @@ class OrderSeeder extends Seeder {
             // Order 8 - Miguel Torres
             [
                 'client_index' => 7,
-                'order_number' => 'ORD-2026-008',
+                'order_number' => 'PED-2026-008',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(44),
                 'created_at' => Carbon::now()->subDays(44),
@@ -159,7 +159,7 @@ class OrderSeeder extends Seeder {
             // Order 9 - Silvia Ramírez
             [
                 'client_index' => 8,
-                'order_number' => 'ORD-2026-009',
+                'order_number' => 'PED-2026-009',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(42),
                 'created_at' => Carbon::now()->subDays(42),
@@ -175,7 +175,7 @@ class OrderSeeder extends Seeder {
             // Order 10 - Fernando Moreno
             [
                 'client_index' => 9,
-                'order_number' => 'ORD-2026-010',
+                'order_number' => 'PED-2026-010',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(40),
                 'created_at' => Carbon::now()->subDays(40),
@@ -189,7 +189,7 @@ class OrderSeeder extends Seeder {
             // Order 11 - Gabriela Castro
             [
                 'client_index' => 10,
-                'order_number' => 'ORD-2026-011',
+                'order_number' => 'PED-2026-011',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(38),
                 'created_at' => Carbon::now()->subDays(38),
@@ -205,7 +205,7 @@ class OrderSeeder extends Seeder {
             // Order 12 - Claudia Vargas
             [
                 'client_index' => 12,
-                'order_number' => 'ORD-2026-012',
+                'order_number' => 'PED-2026-012',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(36),
                 'created_at' => Carbon::now()->subDays(36),
@@ -220,7 +220,7 @@ class OrderSeeder extends Seeder {
             // Order 13 - Daniel Acosta
             [
                 'client_index' => 13,
-                'order_number' => 'ORD-2026-013',
+                'order_number' => 'PED-2026-013',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(34),
                 'created_at' => Carbon::now()->subDays(34),
@@ -235,7 +235,7 @@ class OrderSeeder extends Seeder {
             // Order 14 - Mónica Flores
             [
                 'client_index' => 14,
-                'order_number' => 'ORD-2026-014',
+                'order_number' => 'PED-2026-014',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(32),
                 'created_at' => Carbon::now()->subDays(32),
@@ -250,7 +250,7 @@ class OrderSeeder extends Seeder {
             // Order 15 - Alejandro Ruiz
             [
                 'client_index' => 15,
-                'order_number' => 'ORD-2026-015',
+                'order_number' => 'PED-2026-015',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(30),
                 'created_at' => Carbon::now()->subDays(30),
@@ -265,7 +265,7 @@ class OrderSeeder extends Seeder {
             // Order 16 - Susana Gutiérrez
             [
                 'client_index' => 16,
-                'order_number' => 'ORD-2026-016',
+                'order_number' => 'PED-2026-016',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(28),
                 'created_at' => Carbon::now()->subDays(28),
@@ -280,7 +280,7 @@ class OrderSeeder extends Seeder {
             // Order 17 - Pablo Herrera
             [
                 'client_index' => 17,
-                'order_number' => 'ORD-2026-017',
+                'order_number' => 'PED-2026-017',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(26),
                 'created_at' => Carbon::now()->subDays(26),
@@ -295,7 +295,7 @@ class OrderSeeder extends Seeder {
             // Order 18 - Beatriz Méndez
             [
                 'client_index' => 18,
-                'order_number' => 'ORD-2026-018',
+                'order_number' => 'PED-2026-018',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(24),
                 'created_at' => Carbon::now()->subDays(24),
@@ -310,7 +310,7 @@ class OrderSeeder extends Seeder {
             // Order 19 - Raúl Jiménez
             [
                 'client_index' => 19,
-                'order_number' => 'ORD-2026-019',
+                'order_number' => 'PED-2026-019',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(22),
                 'created_at' => Carbon::now()->subDays(22),
@@ -325,7 +325,7 @@ class OrderSeeder extends Seeder {
             // Order 20 - Elena Navarro
             [
                 'client_index' => 20,
-                'order_number' => 'ORD-2026-020',
+                'order_number' => 'PED-2026-020',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(20),
                 'created_at' => Carbon::now()->subDays(20),
@@ -340,7 +340,7 @@ class OrderSeeder extends Seeder {
             // Order 21 - Gustavo Pereyra
             [
                 'client_index' => 21,
-                'order_number' => 'ORD-2026-021',
+                'order_number' => 'PED-2026-021',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(18),
                 'created_at' => Carbon::now()->subDays(18),
@@ -355,7 +355,7 @@ class OrderSeeder extends Seeder {
             // Order 22 - Mariana Domínguez
             [
                 'client_index' => 22,
-                'order_number' => 'ORD-2026-022',
+                'order_number' => 'PED-2026-022',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(16),
                 'created_at' => Carbon::now()->subDays(16),
@@ -371,7 +371,7 @@ class OrderSeeder extends Seeder {
             // Order 23 - Sergio Villalba
             [
                 'client_index' => 23,
-                'order_number' => 'ORD-2026-023',
+                'order_number' => 'PED-2026-023',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(14),
                 'created_at' => Carbon::now()->subDays(14),
@@ -386,7 +386,7 @@ class OrderSeeder extends Seeder {
             // Order 24 - Cecilia Rojas
             [
                 'client_index' => 24,
-                'order_number' => 'ORD-2026-024',
+                'order_number' => 'PED-2026-024',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(12),
                 'created_at' => Carbon::now()->subDays(12),
@@ -401,7 +401,7 @@ class OrderSeeder extends Seeder {
             // Order 25 - Martín Molina
             [
                 'client_index' => 25,
-                'order_number' => 'ORD-2026-025',
+                'order_number' => 'PED-2026-025',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(10),
                 'created_at' => Carbon::now()->subDays(10),
@@ -415,7 +415,7 @@ class OrderSeeder extends Seeder {
             // Order 26 - Andrea Silva
             [
                 'client_index' => 26,
-                'order_number' => 'ORD-2026-026',
+                'order_number' => 'PED-2026-026',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(9),
                 'created_at' => Carbon::now()->subDays(9),
@@ -430,7 +430,7 @@ class OrderSeeder extends Seeder {
             // Order 27 - Diego Arias
             [
                 'client_index' => 27,
-                'order_number' => 'ORD-2026-027',
+                'order_number' => 'PED-2026-027',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(8),
                 'created_at' => Carbon::now()->subDays(8),
@@ -445,7 +445,7 @@ class OrderSeeder extends Seeder {
             // Order 28 - Valeria Cabrera
             [
                 'client_index' => 28,
-                'order_number' => 'ORD-2026-028',
+                'order_number' => 'PED-2026-028',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(7),
                 'created_at' => Carbon::now()->subDays(7),
@@ -460,7 +460,7 @@ class OrderSeeder extends Seeder {
             // Order 29 - María González - Second Order
             [
                 'client_index' => 0,
-                'order_number' => 'ORD-2026-029',
+                'order_number' => 'PED-2026-029',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(45),
                 'created_at' => Carbon::now()->subDays(45),
@@ -475,7 +475,7 @@ class OrderSeeder extends Seeder {
             // Order 30 - Carlos Rodríguez - Second Order
             [
                 'client_index' => 1,
-                'order_number' => 'ORD-2026-030',
+                'order_number' => 'PED-2026-030',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(43),
                 'created_at' => Carbon::now()->subDays(43),
@@ -490,7 +490,7 @@ class OrderSeeder extends Seeder {
             // Order 31 - Ana Martínez - Second Order
             [
                 'client_index' => 2,
-                'order_number' => 'ORD-2026-031',
+                'order_number' => 'PED-2026-031',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(41),
                 'created_at' => Carbon::now()->subDays(41),
@@ -504,7 +504,7 @@ class OrderSeeder extends Seeder {
             // Order 32 - Roberto López - Second Order
             [
                 'client_index' => 3,
-                'order_number' => 'ORD-2026-032',
+                'order_number' => 'PED-2026-032',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(39),
                 'created_at' => Carbon::now()->subDays(39),
@@ -519,7 +519,7 @@ class OrderSeeder extends Seeder {
             // Order 33 - Laura Fernández - Second Order
             [
                 'client_index' => 4,
-                'order_number' => 'ORD-2026-033',
+                'order_number' => 'PED-2026-033',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(37),
                 'created_at' => Carbon::now()->subDays(37),
@@ -534,7 +534,7 @@ class OrderSeeder extends Seeder {
             // Order 34 - Jorge Sánchez - Second Order
             [
                 'client_index' => 5,
-                'order_number' => 'ORD-2026-034',
+                'order_number' => 'PED-2026-034',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(35),
                 'created_at' => Carbon::now()->subDays(35),
@@ -548,7 +548,7 @@ class OrderSeeder extends Seeder {
             // Order 35 - Patricia Díaz - Second Order
             [
                 'client_index' => 6,
-                'order_number' => 'ORD-2026-035',
+                'order_number' => 'PED-2026-035',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(33),
                 'created_at' => Carbon::now()->subDays(33),
@@ -563,7 +563,7 @@ class OrderSeeder extends Seeder {
             // Order 36 - Miguel Torres - Second Order
             [
                 'client_index' => 7,
-                'order_number' => 'ORD-2026-036',
+                'order_number' => 'PED-2026-036',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(31),
                 'created_at' => Carbon::now()->subDays(31),
@@ -578,7 +578,7 @@ class OrderSeeder extends Seeder {
             // Order 37 - Silvia Ramírez - Second Order
             [
                 'client_index' => 8,
-                'order_number' => 'ORD-2026-037',
+                'order_number' => 'PED-2026-037',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(29),
                 'created_at' => Carbon::now()->subDays(29),
@@ -592,7 +592,7 @@ class OrderSeeder extends Seeder {
             // Order 38 - Fernando Moreno - Second Order
             [
                 'client_index' => 9,
-                'order_number' => 'ORD-2026-038',
+                'order_number' => 'PED-2026-038',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(27),
                 'created_at' => Carbon::now()->subDays(27),
@@ -607,7 +607,7 @@ class OrderSeeder extends Seeder {
             // Order 39 - Gabriela Castro - Second Order
             [
                 'client_index' => 10,
-                'order_number' => 'ORD-2026-039',
+                'order_number' => 'PED-2026-039',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(25),
                 'created_at' => Carbon::now()->subDays(25),
@@ -621,7 +621,7 @@ class OrderSeeder extends Seeder {
             // Order 40 - Claudia Vargas - Second Order
             [
                 'client_index' => 12,
-                'order_number' => 'ORD-2026-040',
+                'order_number' => 'PED-2026-040',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(23),
                 'created_at' => Carbon::now()->subDays(23),
@@ -636,7 +636,7 @@ class OrderSeeder extends Seeder {
             // Order 41 - Daniel Acosta - Second Order
             [
                 'client_index' => 13,
-                'order_number' => 'ORD-2026-041',
+                'order_number' => 'PED-2026-041',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(21),
                 'created_at' => Carbon::now()->subDays(21),
@@ -650,7 +650,7 @@ class OrderSeeder extends Seeder {
             // Order 42 - Mónica Flores - Second Order
             [
                 'client_index' => 14,
-                'order_number' => 'ORD-2026-042',
+                'order_number' => 'PED-2026-042',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(19),
                 'created_at' => Carbon::now()->subDays(19),
@@ -665,7 +665,7 @@ class OrderSeeder extends Seeder {
             // Order 43 - Alejandro Ruiz - Second Order
             [
                 'client_index' => 15,
-                'order_number' => 'ORD-2026-043',
+                'order_number' => 'PED-2026-043',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(17),
                 'created_at' => Carbon::now()->subDays(17),
@@ -680,7 +680,7 @@ class OrderSeeder extends Seeder {
             // Order 44 - Susana Gutiérrez - Second Order
             [
                 'client_index' => 16,
-                'order_number' => 'ORD-2026-044',
+                'order_number' => 'PED-2026-044',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(15),
                 'created_at' => Carbon::now()->subDays(15),
@@ -695,7 +695,7 @@ class OrderSeeder extends Seeder {
             // Order 45 - Pablo Herrera - Second Order
             [
                 'client_index' => 17,
-                'order_number' => 'ORD-2026-045',
+                'order_number' => 'PED-2026-045',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(13),
                 'created_at' => Carbon::now()->subDays(13),
@@ -709,7 +709,7 @@ class OrderSeeder extends Seeder {
             // Order 46 - Beatriz Méndez - Second Order
             [
                 'client_index' => 18,
-                'order_number' => 'ORD-2026-046',
+                'order_number' => 'PED-2026-046',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(11),
                 'created_at' => Carbon::now()->subDays(11),
@@ -724,7 +724,7 @@ class OrderSeeder extends Seeder {
             // Order 47 - María González - Third Order
             [
                 'client_index' => 0,
-                'order_number' => 'ORD-2026-047',
+                'order_number' => 'PED-2026-047',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(30),
                 'created_at' => Carbon::now()->subDays(30),
@@ -739,7 +739,7 @@ class OrderSeeder extends Seeder {
             // Order 48 - Carlos Rodríguez - Third Order
             [
                 'client_index' => 1,
-                'order_number' => 'ORD-2026-048',
+                'order_number' => 'PED-2026-048',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(28),
                 'created_at' => Carbon::now()->subDays(28),
@@ -754,7 +754,7 @@ class OrderSeeder extends Seeder {
             // Order 49 - Ana Martínez - Third Order
             [
                 'client_index' => 2,
-                'order_number' => 'ORD-2026-049',
+                'order_number' => 'PED-2026-049',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(26),
                 'created_at' => Carbon::now()->subDays(26),
@@ -769,7 +769,7 @@ class OrderSeeder extends Seeder {
             // Order 50 - Roberto López - Third Order
             [
                 'client_index' => 3,
-                'order_number' => 'ORD-2026-050',
+                'order_number' => 'PED-2026-050',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(24),
                 'created_at' => Carbon::now()->subDays(24),
@@ -784,7 +784,7 @@ class OrderSeeder extends Seeder {
             // Order 51 - Laura Fernández - Third Order
             [
                 'client_index' => 4,
-                'order_number' => 'ORD-2026-051',
+                'order_number' => 'PED-2026-051',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(22),
                 'created_at' => Carbon::now()->subDays(22),
@@ -799,7 +799,7 @@ class OrderSeeder extends Seeder {
             // Order 52 - Jorge Sánchez - Third Order
             [
                 'client_index' => 5,
-                'order_number' => 'ORD-2026-052',
+                'order_number' => 'PED-2026-052',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(20),
                 'created_at' => Carbon::now()->subDays(20),
@@ -813,7 +813,7 @@ class OrderSeeder extends Seeder {
             // Order 53 - Patricia Díaz - Third Order
             [
                 'client_index' => 6,
-                'order_number' => 'ORD-2026-053',
+                'order_number' => 'PED-2026-053',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(18),
                 'created_at' => Carbon::now()->subDays(18),
@@ -828,7 +828,7 @@ class OrderSeeder extends Seeder {
             // Order 54 - Miguel Torres - Third Order
             [
                 'client_index' => 7,
-                'order_number' => 'ORD-2026-054',
+                'order_number' => 'PED-2026-054',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(16),
                 'created_at' => Carbon::now()->subDays(16),
@@ -843,7 +843,7 @@ class OrderSeeder extends Seeder {
             // Order 55 - Silvia Ramírez - Third Order
             [
                 'client_index' => 8,
-                'order_number' => 'ORD-2026-055',
+                'order_number' => 'PED-2026-055',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(14),
                 'created_at' => Carbon::now()->subDays(14),
@@ -858,7 +858,7 @@ class OrderSeeder extends Seeder {
             // Order 56 - Fernando Moreno - Third Order
             [
                 'client_index' => 9,
-                'order_number' => 'ORD-2026-056',
+                'order_number' => 'PED-2026-056',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(12),
                 'created_at' => Carbon::now()->subDays(12),
@@ -873,7 +873,7 @@ class OrderSeeder extends Seeder {
             // Order 57 - Raúl Jiménez - Second Order
             [
                 'client_index' => 19,
-                'order_number' => 'ORD-2026-057',
+                'order_number' => 'PED-2026-057',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(10),
                 'created_at' => Carbon::now()->subDays(10),
@@ -888,7 +888,7 @@ class OrderSeeder extends Seeder {
             // Order 58 - Elena Navarro - Second Order
             [
                 'client_index' => 20,
-                'order_number' => 'ORD-2026-058',
+                'order_number' => 'PED-2026-058',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(9),
                 'created_at' => Carbon::now()->subDays(9),
@@ -902,7 +902,7 @@ class OrderSeeder extends Seeder {
             // Order 59 - Gustavo Pereyra - Second Order
             [
                 'client_index' => 21,
-                'order_number' => 'ORD-2026-059',
+                'order_number' => 'PED-2026-059',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(8),
                 'created_at' => Carbon::now()->subDays(8),
@@ -917,7 +917,7 @@ class OrderSeeder extends Seeder {
             // Order 60 - Mariana Domínguez - Second Order
             [
                 'client_index' => 22,
-                'order_number' => 'ORD-2026-060',
+                'order_number' => 'PED-2026-060',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(7),
                 'created_at' => Carbon::now()->subDays(7),
@@ -932,7 +932,7 @@ class OrderSeeder extends Seeder {
             // Order 61 - Sergio Villalba - Second Order
             [
                 'client_index' => 23,
-                'order_number' => 'ORD-2026-061',
+                'order_number' => 'PED-2026-061',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(6),
                 'created_at' => Carbon::now()->subDays(6),
@@ -947,7 +947,7 @@ class OrderSeeder extends Seeder {
             // Order 62 - Cecilia Rojas - Second Order
             [
                 'client_index' => 24,
-                'order_number' => 'ORD-2026-062',
+                'order_number' => 'PED-2026-062',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(5),
                 'created_at' => Carbon::now()->subDays(5),
@@ -962,7 +962,7 @@ class OrderSeeder extends Seeder {
             // Order 63 - Martín Molina - Second Order
             [
                 'client_index' => 25,
-                'order_number' => 'ORD-2026-063',
+                'order_number' => 'PED-2026-063',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(15),
                 'created_at' => Carbon::now()->subDays(15),
@@ -977,7 +977,7 @@ class OrderSeeder extends Seeder {
             // Order 64 - Andrea Silva - Second Order
             [
                 'client_index' => 26,
-                'order_number' => 'ORD-2026-064',
+                'order_number' => 'PED-2026-064',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(13),
                 'created_at' => Carbon::now()->subDays(13),
@@ -991,7 +991,7 @@ class OrderSeeder extends Seeder {
             // Order 65 - Diego Arias - Second Order
             [
                 'client_index' => 27,
-                'order_number' => 'ORD-2026-065',
+                'order_number' => 'PED-2026-065',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(11),
                 'created_at' => Carbon::now()->subDays(11),
@@ -1006,7 +1006,7 @@ class OrderSeeder extends Seeder {
             // Order 66 - Valeria Cabrera - Second Order
             [
                 'client_index' => 28,
-                'order_number' => 'ORD-2026-066',
+                'order_number' => 'PED-2026-066',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(10),
                 'created_at' => Carbon::now()->subDays(10),
@@ -1022,7 +1022,7 @@ class OrderSeeder extends Seeder {
             // Order 67 - Gabriela Castro - Third Order
             [
                 'client_index' => 10,
-                'order_number' => 'ORD-2026-067',
+                'order_number' => 'PED-2026-067',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(9),
                 'created_at' => Carbon::now()->subDays(9),
@@ -1037,7 +1037,7 @@ class OrderSeeder extends Seeder {
             // Order 68 - Claudia Vargas - Third Order
             [
                 'client_index' => 12,
-                'order_number' => 'ORD-2026-068',
+                'order_number' => 'PED-2026-068',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(8),
                 'created_at' => Carbon::now()->subDays(8),
@@ -1052,7 +1052,7 @@ class OrderSeeder extends Seeder {
             // Order 69 - Daniel Acosta - Third Order
             [
                 'client_index' => 13,
-                'order_number' => 'ORD-2026-069',
+                'order_number' => 'PED-2026-069',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(7),
                 'created_at' => Carbon::now()->subDays(7),
@@ -1067,7 +1067,7 @@ class OrderSeeder extends Seeder {
             // Order 70 - Mónica Flores - Third Order
             [
                 'client_index' => 14,
-                'order_number' => 'ORD-2026-070',
+                'order_number' => 'PED-2026-070',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(6),
                 'created_at' => Carbon::now()->subDays(6),
@@ -1082,7 +1082,7 @@ class OrderSeeder extends Seeder {
             // Order 71 - Alejandro Ruiz - Third Order
             [
                 'client_index' => 15,
-                'order_number' => 'ORD-2026-071',
+                'order_number' => 'PED-2026-071',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(5),
                 'created_at' => Carbon::now()->subDays(5),
@@ -1096,7 +1096,7 @@ class OrderSeeder extends Seeder {
             // Order 72 - Susana Gutiérrez - Third Order
             [
                 'client_index' => 16,
-                'order_number' => 'ORD-2026-072',
+                'order_number' => 'PED-2026-072',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(4),
                 'created_at' => Carbon::now()->subDays(4),
@@ -1111,7 +1111,7 @@ class OrderSeeder extends Seeder {
             // Order 73 - Pablo Herrera - Third Order
             [
                 'client_index' => 17,
-                'order_number' => 'ORD-2026-073',
+                'order_number' => 'PED-2026-073',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(3),
                 'created_at' => Carbon::now()->subDays(3),
@@ -1126,7 +1126,7 @@ class OrderSeeder extends Seeder {
             // Order 74 - Beatriz Méndez - Third Order
             [
                 'client_index' => 18,
-                'order_number' => 'ORD-2026-074',
+                'order_number' => 'PED-2026-074',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(2),
                 'created_at' => Carbon::now()->subDays(2),
@@ -1141,7 +1141,7 @@ class OrderSeeder extends Seeder {
             // Order 75 - María González - Fourth Order
             [
                 'client_index' => 0,
-                'order_number' => 'ORD-2026-075',
+                'order_number' => 'PED-2026-075',
                 'status' => 'delivered',
                 'reception_date' => Carbon::now()->subDays(15),
                 'created_at' => Carbon::now()->subDays(15),
@@ -1156,7 +1156,7 @@ class OrderSeeder extends Seeder {
             // Order 76 - Carlos Rodríguez - Fourth Order - In Progress
             [
                 'client_index' => 1,
-                'order_number' => 'ORD-2026-076',
+                'order_number' => 'PED-2026-076',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(5),
                 'created_at' => Carbon::now()->subDays(5),
@@ -1171,7 +1171,7 @@ class OrderSeeder extends Seeder {
             // Order 77 - Ana Martínez - Fourth Order - In Progress
             [
                 'client_index' => 2,
-                'order_number' => 'ORD-2026-077',
+                'order_number' => 'PED-2026-077',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(4),
                 'created_at' => Carbon::now()->subDays(4),
@@ -1186,7 +1186,7 @@ class OrderSeeder extends Seeder {
             // Order 78 - Roberto López - Fourth Order - In Progress
             [
                 'client_index' => 3,
-                'order_number' => 'ORD-2026-078',
+                'order_number' => 'PED-2026-078',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(3),
                 'created_at' => Carbon::now()->subDays(3),
@@ -1200,7 +1200,7 @@ class OrderSeeder extends Seeder {
             // Order 79 - Laura Fernández - Fourth Order - In Progress
             [
                 'client_index' => 4,
-                'order_number' => 'ORD-2026-079',
+                'order_number' => 'PED-2026-079',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(4),
                 'created_at' => Carbon::now()->subDays(4),
@@ -1215,7 +1215,7 @@ class OrderSeeder extends Seeder {
             // Order 80 - Jorge Sánchez - Fourth Order - In Progress
             [
                 'client_index' => 5,
-                'order_number' => 'ORD-2026-080',
+                'order_number' => 'PED-2026-080',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(3),
                 'created_at' => Carbon::now()->subDays(3),
@@ -1230,7 +1230,7 @@ class OrderSeeder extends Seeder {
             // Order 81 - Patricia Díaz - Fourth Order - In Progress
             [
                 'client_index' => 6,
-                'order_number' => 'ORD-2026-081',
+                'order_number' => 'PED-2026-081',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(2),
                 'created_at' => Carbon::now()->subDays(2),
@@ -1244,7 +1244,7 @@ class OrderSeeder extends Seeder {
             // Order 82 - Miguel Torres - Fourth Order - In Progress
             [
                 'client_index' => 7,
-                'order_number' => 'ORD-2026-082',
+                'order_number' => 'PED-2026-082',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(5),
                 'created_at' => Carbon::now()->subDays(5),
@@ -1259,7 +1259,7 @@ class OrderSeeder extends Seeder {
             // Order 83 - Silvia Ramírez - Fourth Order - In Progress
             [
                 'client_index' => 8,
-                'order_number' => 'ORD-2026-083',
+                'order_number' => 'PED-2026-083',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(4),
                 'created_at' => Carbon::now()->subDays(4),
@@ -1274,7 +1274,7 @@ class OrderSeeder extends Seeder {
             // Order 84 - Fernando Moreno - Fourth Order - In Progress
             [
                 'client_index' => 9,
-                'order_number' => 'ORD-2026-084',
+                'order_number' => 'PED-2026-084',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(3),
                 'created_at' => Carbon::now()->subDays(3),
@@ -1288,7 +1288,7 @@ class OrderSeeder extends Seeder {
             // Order 85 - Gabriela Castro - Fourth Order - In Progress
             [
                 'client_index' => 10,
-                'order_number' => 'ORD-2026-085',
+                'order_number' => 'PED-2026-085',
                 'status' => 'in_progress',
                 'reception_date' => Carbon::now()->subDays(2),
                 'created_at' => Carbon::now()->subDays(2),
@@ -1303,7 +1303,7 @@ class OrderSeeder extends Seeder {
             // Order 86 - Claudia Vargas - Fourth Order - Pending
             [
                 'client_index' => 12,
-                'order_number' => 'ORD-2026-086',
+                'order_number' => 'PED-2026-086',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1318,7 +1318,7 @@ class OrderSeeder extends Seeder {
             // Order 87 - Daniel Acosta - Fourth Order - Pending
             [
                 'client_index' => 13,
-                'order_number' => 'ORD-2026-087',
+                'order_number' => 'PED-2026-087',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1333,7 +1333,7 @@ class OrderSeeder extends Seeder {
             // Order 88 - Mónica Flores - Fourth Order - Pending
             [
                 'client_index' => 14,
-                'order_number' => 'ORD-2026-088',
+                'order_number' => 'PED-2026-088',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1348,7 +1348,7 @@ class OrderSeeder extends Seeder {
             // Order 89 - Alejandro Ruiz - Fourth Order - Pending
             [
                 'client_index' => 15,
-                'order_number' => 'ORD-2026-089',
+                'order_number' => 'PED-2026-089',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1362,7 +1362,7 @@ class OrderSeeder extends Seeder {
             // Order 90 - Susana Gutiérrez - Fourth Order - Pending
             [
                 'client_index' => 16,
-                'order_number' => 'ORD-2026-090',
+                'order_number' => 'PED-2026-090',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1377,7 +1377,7 @@ class OrderSeeder extends Seeder {
             // Order 91 - Pablo Herrera - Fourth Order - Pending
             [
                 'client_index' => 17,
-                'order_number' => 'ORD-2026-091',
+                'order_number' => 'PED-2026-091',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1392,7 +1392,7 @@ class OrderSeeder extends Seeder {
             // Order 92 - Beatriz Méndez - Fourth Order - Pending
             [
                 'client_index' => 18,
-                'order_number' => 'ORD-2026-092',
+                'order_number' => 'PED-2026-092',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1407,7 +1407,7 @@ class OrderSeeder extends Seeder {
             // Order 93 - Raúl Jiménez - Third Order - Pending
             [
                 'client_index' => 19,
-                'order_number' => 'ORD-2026-093',
+                'order_number' => 'PED-2026-093',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1422,7 +1422,7 @@ class OrderSeeder extends Seeder {
             // Order 94 - Elena Navarro - Third Order - Pending
             [
                 'client_index' => 20,
-                'order_number' => 'ORD-2026-094',
+                'order_number' => 'PED-2026-094',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1437,7 +1437,7 @@ class OrderSeeder extends Seeder {
             // Order 95 - Gustavo Pereyra - Third Order - Pending
             [
                 'client_index' => 21,
-                'order_number' => 'ORD-2026-095',
+                'order_number' => 'PED-2026-095',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1451,7 +1451,7 @@ class OrderSeeder extends Seeder {
             // Order 96 - Mariana Domínguez - Third Order - Pending
             [
                 'client_index' => 22,
-                'order_number' => 'ORD-2026-096',
+                'order_number' => 'PED-2026-096',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1466,7 +1466,7 @@ class OrderSeeder extends Seeder {
             // Order 97 - Sergio Villalba - Third Order - Pending
             [
                 'client_index' => 23,
-                'order_number' => 'ORD-2026-097',
+                'order_number' => 'PED-2026-097',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1481,7 +1481,7 @@ class OrderSeeder extends Seeder {
             // Order 98 - Cecilia Rojas - Third Order - Pending
             [
                 'client_index' => 24,
-                'order_number' => 'ORD-2026-098',
+                'order_number' => 'PED-2026-098',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -1496,7 +1496,7 @@ class OrderSeeder extends Seeder {
             // Order 99 - Martín Molina - Third Order - Pending
             [
                 'client_index' => 25,
-                'order_number' => 'ORD-2026-099',
+                'order_number' => 'PED-2026-099',
                 'status' => 'pending',
                 'reception_date' => Carbon::now()->subDays(1),
                 'created_at' => Carbon::now()->subDays(1),
@@ -1511,7 +1511,7 @@ class OrderSeeder extends Seeder {
             // Order 100 - Andrea Silva - Third Order - Pending
             [
                 'client_index' => 26,
-                'order_number' => 'ORD-2026-100',
+                'order_number' => 'PED-2026-100',
                 'status' => 'pending',
                 'reception_date' => Carbon::now(),
                 'created_at' => Carbon::now(),
